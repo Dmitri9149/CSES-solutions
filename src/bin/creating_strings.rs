@@ -1,5 +1,5 @@
 use std::io::{BufRead, BufReader};
-use std::collections::HashSet;
+//use std::collections::HashSet;
 use std::collections::BTreeMap;
 
 
@@ -10,7 +10,7 @@ pub struct Perm {
     pub line:String,
     pub permutation:String,
     pub chosen:[bool;8],
-    pub se:HashSet<String>
+    pub se:BTreeMap<String,bool>
 }
 
 impl Perm {
@@ -18,7 +18,7 @@ impl Perm {
            ,line:&String
            ,perm:&String
            ,chosen:&[bool;8]
-           ,se:&HashSet<String>) -> Perm {
+           ,se:&BTreeMap<String,bool>) -> Perm {
         Perm {
             n:n.to_owned(),
             line:line.to_owned(),
@@ -32,7 +32,10 @@ impl Perm {
         if self.permutation.len() == self.n {
 //            println!("length {}", &self.permutation.len());
 //            println!("will be inserted {}\n", &self.permutation.to_string());
-            self.se.insert(self.permutation.to_string());
+//            self.se.insert(self.permutation.to_string());
+        self.se
+            .entry(self.permutation.to_string())
+            .or_insert(true);
         } else {
             for i in 0..self.n {
                 if self.chosen[i] {continue};
@@ -55,7 +58,7 @@ impl Perm {
 fn main() {
     let mut input = BufReader::new(std::io::stdin());
     let mut line = "".to_string();
-    let se:HashSet<String> = HashSet::new();
+    let se:BTreeMap<String,bool> = BTreeMap::new();
     let permutation = "".to_string();
     let chosen: [bool;8] = [false;8];
 
@@ -73,7 +76,7 @@ fn main() {
     ob.search();
     print!("{}\n",&ob.se.len());
 
-    for el in ob.se.iter() {
+    for (el,statement) in ob.se.iter() {
         print!("{}\n",&el);
     }
 }
