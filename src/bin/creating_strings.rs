@@ -1,9 +1,5 @@
 use std::io::{BufRead, BufReader};
-//use std::collections::HashSet;
 use std::collections::BTreeMap;
-
-
-
 
 pub struct Perm {
     pub n:usize,
@@ -30,9 +26,6 @@ impl Perm {
     }
     fn search(&mut self) {
         if self.permutation.len() == self.n {
-//            println!("length {}", &self.permutation.len());
-//            println!("will be inserted {}\n", &self.permutation.to_string());
-//            self.se.insert(self.permutation.to_string());
         self.se
             .entry(self.permutation.to_string())
             .or_insert(true);
@@ -46,12 +39,6 @@ impl Perm {
                 self.permutation = self.permutation[0..self.permutation.len()-1].to_string();
             }
         }
-/*
-        println!("{}",&self.se.len());
-        for el in self.se.iter() {
-            println!("{}",&el);
-        }
-*/
     }
 }
 
