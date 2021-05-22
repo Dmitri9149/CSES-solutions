@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use std::io;
 use std::str::SplitWhitespace;
 
-pub fn read_lines() {
+pub fn read_lines() -> Vec<(u32,u32)> {
     let mut input = BufReader::new(std::io::stdin());
     let mut line = "".to_string();
     input.read_line(&mut line)
@@ -25,7 +25,7 @@ pub fn read_lines() {
             vect.push(seed);
             number-=1;
             if number ==0 {
-                return ();
+                return vect;
             }
         }
     }   
