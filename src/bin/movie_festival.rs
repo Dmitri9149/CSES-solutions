@@ -1,3 +1,16 @@
+/*
+In a movie festival n movies will be shown. You know the starting and ending time of each movie. What is the maximum number of movies you can watch entirely?
+
+Input
+
+The first input line has an integer n: the number of movies.
+
+After this, there are n lines that describe the movies. Each line has two integers a and b: the starting and ending times of a movie.
+
+Output
+
+Print one integer: the maximum number of movies.
+*/
 use std::io::{BufRead, BufReader};
 use std::collections::BTreeMap;
 
