@@ -17,7 +17,7 @@ use std::io;
 use std::str::SplitWhitespace;
 
 
-pub fn read_lines() -> Vec<(u32,u32)> {
+pub fn read_lines() -> Vec<(usize,usize)> {
     let mut input = BufReader::new(std::io::stdin());
     let mut line = "".to_string();
     input.read_line(&mut line)
@@ -26,16 +26,16 @@ pub fn read_lines() -> Vec<(u32,u32)> {
     line.pop();
     let mut number = line.parse::<u32>().unwrap();
     let stdin = io::stdin();
-    let mut vect:Vec<(u32,u32)> = vec![];
+    let mut vect:Vec<(usize,usize)> = vec![];
     let mut iter:SplitWhitespace; 
     loop {
         // Iterate over all lines that will be inputted
         for line in stdin.lock().lines() {
             let input = line.expect("Failed to read line");
             iter = input.split_whitespace();
-            let mut seed:(u32,u32)=(0,0);
-            seed.0 = iter.next().unwrap().parse::<u32>().unwrap();
-            seed.1 = iter.next().unwrap().parse::<u32>().unwrap();
+            let mut seed:(usize,usize)=(0,0);
+            seed.0 = iter.next().unwrap().parse::<usize>().unwrap();
+            seed.1 = iter.next().unwrap().parse::<usize>().unwrap();
             vect.push(seed);
             number-=1;
             if number ==0 {
@@ -46,30 +46,27 @@ pub fn read_lines() -> Vec<(u32,u32)> {
 }
 
 pub struct Perm {
-    pub n:u32,
-    pub k:u32,
-    pub vect:Vec<(u32,u32)>,
-    pub intervals:Vec<(u32,u32)>,
-    pub how_many:u32,
-    pub current:u32,
+    pub n:usize,
+    pub k:usize,
+    pub intervals:Vec<(usize,usize)>,
+    pub how_many:usize,
+    pub current:usize,
     pub chosen:[bool;200000],
-    pub prev:(u32,u32)
+    pub prev:(usize,usize)
 }
 
 impl Perm {
-    fn new(n:&u32
-           ,k:&u32
-           ,vect:&Vec<(u32,u32)>
-           ,intervals:&Vec<(u32,u32)>
-           ,how_many:&u32
-           ,current:&u32
+    fn new(n:&usize
+           ,k:&usize
+           ,intervals:&Vec<(usize,usize)>
+           ,how_many:&usize
+           ,current:&usize
            ,chosen:&[bool;200000]
-           ,prev:&(u32,u32)
+           ,prev:&(usize,usize)
            ) -> Perm {
         Perm {
             n:n.to_owned()
             ,k:k.to_owned()
-            ,vect:vect.to_owned()
             ,intervals:intervals.to_owned()
             ,how_many:how_many.to_owned()
             ,current:current.to_owned()
@@ -87,10 +84,10 @@ impl Perm {
             for i in 0..self.n {
                 if self.chosen[i] {continue};
                 self.chosen[i]=true;
-                if self.prev.1 < self.vect[i].1 {
+                if self.prev.1 < self.intervals[i].1 {
                     self.current+=1;
                 }
-                self.prev = self.vect[i];
+                self.prev = self.intervals[i];
                 self.k+=1;
                 self.search();
                 self.chosen[i]=false;
@@ -98,8 +95,9 @@ impl Perm {
                 self.current=0;
                 self.k = 0;
             }
-        println!("{}",&self.how_many);
         }
+        println!("{}",&self.how_many);
+
     }
 }
 
@@ -125,10 +123,9 @@ fn main() {
     let vect = read_lines();
     let chosen: [bool;200000] = [false;200000];
     let mut ob:Perm = Perm::new(
-        &0
-        ,&vect.len()
-        ,&vect
+        &vect.len()
         ,&0
+        ,&vect
         ,&0
         ,&0
         ,&chosen
