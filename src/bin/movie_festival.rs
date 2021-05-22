@@ -45,49 +45,66 @@ pub fn read_lines() -> Vec<(u32,u32)> {
     }
 }
 
-
 pub struct Perm {
-    pub n:usize,
-    pub line:String,
-    pub permutation:String,
-    pub chosen:[bool;8],
-    pub se:BTreeMap<String,bool>
+    pub n:u32,
+    pub k:u32,
+    pub vect:Vec<(u32,u32)>,
+    pub intervals:Vec<(u32,u32)>,
+    pub how_many:u32,
+    pub current:u32,
+    pub chosen:[bool;200000],
+    pub prev:(u32,u32)
 }
 
 impl Perm {
-    fn new(n:&usize
-           ,line:&String
-           ,perm:&String
-           ,chosen:&[bool;8]
-           ,se:&BTreeMap<String,bool>) -> Perm {
+    fn new(n:&u32
+           ,k:&u32
+           ,vect:&Vec<(u32,u32)>
+           ,intervals:&Vec<(u32,u32)>
+           ,how_many:&u32
+           ,current:&u32
+           ,chosen:&[bool;200000]
+           ,prev:&(u32,u32)
+           ) -> Perm {
         Perm {
-            n:n.to_owned(),
-            line:line.to_owned(),
-            permutation:perm.to_owned(),
-            chosen:chosen.to_owned(),
-            se:se.to_owned(),
+            n:n.to_owned()
+            ,k:k.to_owned()
+            ,vect:vect.to_owned()
+            ,intervals:intervals.to_owned()
+            ,how_many:how_many.to_owned()
+            ,current:current.to_owned()
+            ,chosen:chosen.to_owned()
+            ,prev:prev.to_owned()
 
         }
     }
     fn search(&mut self) {
-        if self.permutation.len() == self.n {
-        self.se
-            .entry(self.permutation.to_string())
-            .or_insert(true);
+        if self.k == self.n-1 {
+            if self.current > self.how_many {
+                self.how_many = self.current;
+            }
         } else {
             for i in 0..self.n {
                 if self.chosen[i] {continue};
                 self.chosen[i]=true;
-                self.permutation.push(self.line.chars().nth(i).unwrap());
+                if self.prev.1 < self.vect[i].1 {
+                    self.current+=1;
+                }
+                self.prev = self.vect[i];
+                self.k+=1;
                 self.search();
                 self.chosen[i]=false;
-                self.permutation = self.permutation[0..self.permutation.len()-1].to_string();
+                self.prev = (0,0);
+                self.current=0;
+                self.k = 0;
             }
+        println!("{}",&self.how_many);
         }
     }
 }
 
 fn main() {
+/*
     let mut input = BufReader::new(std::io::stdin());
     let mut line = "".to_string();
     let se:BTreeMap<String,bool> = BTreeMap::new();
@@ -104,11 +121,24 @@ fn main() {
     if (n < 1 ) || (n > n_max ) {
         panic!("Not valid input string size! Panic!")
     }
-    let mut ob:Perm = Perm::new(&n,&line,&permutation,&chosen,&se);
+*/  
+    let vect = read_lines();
+    let chosen: [bool;200000] = [false;200000];
+    let mut ob:Perm = Perm::new(
+        &0
+        ,&vect.len()
+        ,&vect
+        ,&0
+        ,&0
+        ,&0
+        ,&chosen
+        ,&(0,0));
     ob.search();
+/*
     print!("{}\n",&ob.se.len());
 
     for (el,statement) in ob.se.iter() {
         print!("{}\n",&el);
     }
+*/
 }
