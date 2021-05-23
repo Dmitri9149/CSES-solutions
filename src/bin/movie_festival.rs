@@ -12,130 +12,109 @@ Output
 Print one integer: the maximum number of movies.
 */
 use std::io::{BufRead, BufReader};
-use std::collections::BTreeMap;
+//use std::collections::BTreeMap;
 use std::io;
 use std::str::SplitWhitespace;
+use std::cmp;
+use std::convert::TryInto;
 
 
-pub fn read_lines() -> Vec<(usize,usize)> {
-    let mut input = BufReader::new(std::io::stdin());
-    let mut line = "".to_string();
-    input.read_line(&mut line)
-        .unwrap();
-// remove the trailing '\n'
-    line.pop();
-    let mut number = line.parse::<u32>().unwrap();
+pub fn read_lines() -> Vec<(u64,u64)> {
     let stdin = io::stdin();
-    let mut vect:Vec<(usize,usize)> = vec![];
     let mut iter:SplitWhitespace; 
-    loop {
-        // Iterate over all lines that will be inputted
-        for line in stdin.lock().lines() {
-            let input = line.expect("Failed to read line");
-            iter = input.split_whitespace();
-            let mut seed:(usize,usize)=(0,0);
-            seed.0 = iter.next().unwrap().parse::<usize>().unwrap();
-            seed.1 = iter.next().unwrap().parse::<usize>().unwrap();
-            vect.push(seed);
-            number-=1;
-            if number ==0 {
-                return vect;
-            }   
+    let mut iter_line = stdin.lock().lines();
+    let mut number = iter_line
+        .next()
+        .unwrap()
+        .expect("failed to read next line")
+        .parse::<u64>().unwrap();
+    let mut vect:Vec<(u64,u64)> = vec![];
+    for line in iter_line {
+        let input = line.expect("Failed to read line");
+        iter = input.split_whitespace();
+        let mut seed:(u64,u64)=(0,0);
+        seed.0 = iter.next().unwrap().parse::<u64>().unwrap();
+        seed.1 = iter.next().unwrap().parse::<u64>().unwrap();
+        vect.push(seed);
+        number-=1;
+        if number == 0 {
+            break;
         }
     }
+    vect
 }
 
 pub struct Perm {
-    pub n:usize,
-    pub k:usize,
-    pub intervals:Vec<(usize,usize)>,
-    pub how_many:usize,
-    pub current:usize,
+    pub intervals:Vec<(u64,u64)>,
+    pub how_many:u64,
+    pub perm:Vec<(u64,u64)>,
     pub chosen:[bool;200000],
-    pub prev:(usize,usize)
 }
 
 impl Perm {
-    fn new(n:&usize
-           ,k:&usize
-           ,intervals:&Vec<(usize,usize)>
-           ,how_many:&usize
-           ,current:&usize
+    fn new(intervals:&Vec<(u64,u64)>
+           ,how_many:&u64
+           ,perm:&Vec<(u64,u64)>
            ,chosen:&[bool;200000]
-           ,prev:&(usize,usize)
-           ) -> Perm {
-        Perm {
-            n:n.to_owned()
-            ,k:k.to_owned()
-            ,intervals:intervals.to_owned()
+           )-> Perm {
+        Perm {intervals:intervals.to_owned()
             ,how_many:how_many.to_owned()
-            ,current:current.to_owned()
+            ,perm:perm.to_owned()
             ,chosen:chosen.to_owned()
-            ,prev:prev.to_owned()
-
         }
     }
-    fn search(&mut self) {
-        if self.k == self.n-1 {
-            if self.current > self.how_many {
-                self.how_many = self.current;
+    fn search(&mut self,k:&u64) {
+        if *k  == self.intervals.len().try_into().unwrap(){
+//            println!("Edge condition, k:{}, how_many: {}",&k,&self.how_many);
+//            println!("Perm:{:?}",self.perm);
+            let mut zeros = 0;
+            for x in self.perm.iter() {
+                if *x == (0,0) {
+                    zeros+=1;
+                }
             }
+            let not_zeros = self.intervals.len()-zeros;
+            if not_zeros > self.how_many.try_into().unwrap(){
+                self.how_many = not_zeros.try_into().unwrap();
+            }
+//*****************************
+//            println!("Edge condition, after if... how_many:{}",self.how_many);
         } else {
-            for i in 0..self.n {
+            for i in 0..self.intervals.len() {
                 if self.chosen[i] {continue};
                 self.chosen[i]=true;
-                if self.prev.1 < self.intervals[i].1 {
-                    self.current+=1;
+//                println!("perm before loop: {:?}", self.perm);
+                let mut flag = false;
+                for x in self.perm.iter() {
+                    if ((x.1-x.0)+(self.intervals[i].1 - self.intervals[i].0))
+                        > (cmp::max(x.1,self.intervals[i].1)-cmp::min(x.0,self.intervals[i].0)) {
+                        flag = true;
+                        break;
+                    }
                 }
-                self.prev = self.intervals[i];
-                self.k+=1;
-                self.search();
+                if flag != true {
+                    self.perm.push(self.intervals[i]);
+                } else {
+                    self.perm.push((0,0));
+                }
+//                println!("i: {}, k: {}", i, &k); 
+//                println!("Perm:{:?}",self.perm);
+
+                self.search(&(k+1));
                 self.chosen[i]=false;
-                self.prev = (0,0);
-                self.current=0;
-                self.k = 0;
+//                self.perm = self.perm[0..self.perm.len()-1];
+                self.perm.pop();
+//                println!("end of for loop with i = {} and k = {}\n",&i, &k);
             }
         }
-        println!("{}",&self.how_many);
-
+//        println!("out of function with k = {}\n", &k);
     }
 }
 
 fn main() {
-/*
-    let mut input = BufReader::new(std::io::stdin());
-    let mut line = "".to_string();
-    let se:BTreeMap<String,bool> = BTreeMap::new();
-    let permutation = "".to_string();
-    let chosen: [bool;8] = [false;8];
-
-    input.read_line(&mut line)
-        .unwrap();
-// remove the trailing '\n'
-    line.pop();
-// max size of input -> see task constrain
-    let n_max = 8;
-    let n = line.len();
-    if (n < 1 ) || (n > n_max ) {
-        panic!("Not valid input string size! Panic!")
-    }
-*/  
     let vect = read_lines();
     let chosen: [bool;200000] = [false;200000];
-    let mut ob:Perm = Perm::new(
-        &vect.len()
-        ,&0
-        ,&vect
-        ,&0
-        ,&0
-        ,&chosen
-        ,&(0,0));
-    ob.search();
-/*
-    print!("{}\n",&ob.se.len());
-
-    for (el,statement) in ob.se.iter() {
-        print!("{}\n",&el);
-    }
-*/
+    let mut ob:Perm = Perm::new(&vect,&0,&vec![],&chosen);
+    ob.search(&0);
+    print!("{}\n",ob.how_many);
 }
