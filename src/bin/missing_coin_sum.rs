@@ -1,3 +1,22 @@
+/*
+You have n coins with positive integer values.
+What is the smallest sum you cannot create using a subset of the coins?
+
+Input
+
+The first input line has an integer n: the number of coins.
+
+The second line has n integers x1,x2,…,xn: the value of each coin.
+
+Output
+
+Print one integer: the smallest coin sum.
+
+Constraints
+1≤n≤2⋅105
+1≤xi≤109
+*/
+
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
