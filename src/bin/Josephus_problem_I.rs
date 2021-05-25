@@ -1,6 +1,9 @@
 use std::io::{BufRead};
 use std::io;
 use std::collections::BTreeMap;
+use std::iter::Rev;
+
+
 
 fn main() {
     let stdin = io::stdin();
@@ -19,54 +22,88 @@ fn main() {
 //    println!("number: {}",number);
 //    println!("tree: {:?}",&tree);
 
-    let mut flag:bool=false;
-    let mut tree1:BTreeMap<usize,bool>= BTreeMap::new();
+// 'true'  if iterate 'to the left' , in normal way
+// 'false' if we will iterate 'to the right' , i.e. will use Rev<> iterator
+    let mut direction:bool=true;
+    let mut tree1=tree;
+/*
+    let tree_b:BTreeMap<usize,bool>= BTreeMap::new();
+    let mut tree_iter_b=tree_b.into_iter().rev();
+    */
+//    let mut tree1:BTreeMap<usize,bool>= BTreeMap::new();
     loop {
-        flag = false;
-//        println!("tree in loop{:?}",&tree);
-//        break;
-        for (elt,cond) in tree.iter() {
-//            println!("flag before if {}",flag);
-//            println!("elt before if {}",elt);
-                
-            if flag == true {
-                print!("{:?} ",&elt);
-                flag = false;  
+        let closure_a = |mut flag|-> BTreeMap<usize,bool> {
+            let mut tr = BTreeMap::new();
+            for (elt,cond) in tree1.iter() {
+    //            println!("flag before if {}",flag);
+    //            println!("elt before if {}",elt);
+                    
+                if flag == true {
+                    print!("{:?} ",&elt);
+                    flag = false;  
 
-//                println!("flag in insert {}",flag);
-//                tree1.insert(*elt,*cond);
-//                flag=true;
-//                println!("flag in insert {}",flag);
-            } else {
-//                println!(" elt in insert {}",&elt);
-                tree1.insert(*elt,*cond);
-                flag=true;
+    //                println!("flag in insert {}",flag);
+    //                tree1.insert(*elt,*cond);
+    //                flag=true;
+    //                println!("flag in insert {}",flag);
+                } else {
+    //                println!(" elt in insert {}",&elt);
+                    tr.insert(*elt,*cond);
+                    flag=true;
 
-//                print!("{:?} ",elt);
-//                flag = false;  
+    //                print!("{:?} ",elt);
+    //                flag = false;  
+                }
             }
+//            println!("closure_a: {:?}",&tr);
+            tr
 
+        };
+        let closure_b = |mut flag| {
+            let mut tr = BTreeMap::new();
+            for (elt,cond) in tree1.iter() {
+    //            println!("flag before if {}",flag);
+    //            println!("elt before if {}",elt);
+                    
+                if flag == true {
+                    print!("{:?} ",&elt);
+                    flag = false;  
+
+    //                println!("flag in insert {}",flag);
+    //                tree1.insert(*elt,*cond);
+    //                flag=true;
+    //                println!("flag in insert {}",flag);
+                } else {
+    //                println!(" elt in insert {}",&elt);
+                    tr.insert(*elt,*cond);
+                    flag=true;
+
+    //                print!("{:?} ",elt);
+    //                flag = false;  
+                }
+            }
+//            println!("closure_b: {:?}",&tr);
+            tr
+        };
+//        let mut tree1:BTreeMap<usize,bool>=BTreeMap::new();
+        if direction == true {
+            tree1=closure_a(false);
+            direction = false;
+//            println!("tree1: {:?}, direction: {:?}, size: {:?}", &tree1, &direction,&tree1.keys().len());
+        } else {
+            tree1=closure_a(false);
+//            println!("tree1: {:?}, direction: {:?}, size: {:?}", &tree1, &direction,&tree1.keys().len());
+            direction = true;
         }
-/*        break;
-        if tree1.len() == 0 {
-            break;
-        }
-*/
-        match &tree1.len() {
+//        print!("after closure call");
+        let size = &tree1.keys().len();
+//        println!("size :{:?}",size);
+        match *size {
             0 => {break;},
             1=> {print!("{}",&tree1.iter().next().unwrap().0); break;},
-            _=> (),
+            _=> {},
         }
-        tree=tree1.to_owned();
-//        println!("tree after assigning {:?}", &tree);
-        tree1=BTreeMap::new();
-/*
-        println!("new tree {:?}", tree);
-        break;
-*/
+//        print!("after match)");
+//        break;
     }
-
-
-//    println!("number: {}",number);
-//    println!("tree: {:?}",tree);
 }
