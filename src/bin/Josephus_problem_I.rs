@@ -2,6 +2,7 @@ use std::io::{BufRead};
 use std::io;
 use std::collections::BTreeMap;
 use std::iter::Rev;
+use std::collections::VecDeque;
 
 
 
@@ -19,54 +20,20 @@ fn main() {
 
 
 
-    let mut tree:BTreeMap<usize,bool>= BTreeMap::new();
+    let mut tree:VecDeque<usize>=VecDeque::new();
     for i in 1..=number {
         tree
-            .entry(i)
-            .or_insert(true);
+            .push(i);
     }
 //    println!("number: {}",number);
 //    println!("tree: {:?}",&tree);
 
-// 'true'  if iterate 'to the left' , in normal way
-// 'false' if we will iterate 'to the right' , i.e. will use Rev<> iterator
-    let closure_a = |mut flag|-> {
-    let mut tr:HashSet<usize>=HashSet::new();
-        for (elt,cond) in range.cycle() {
-//            println!("flag before if {}",flag);
-//            println!("elt before if {}",elt);
-                
-            if flag == true {
-                print!("{:?} ",&elt);
-                flag = false;  
 
-//                println!("flag in insert {}",flag);
-//                tree1.insert(*elt,*cond);
-//                flag=true;
-//                println!("flag in insert {}",flag);
-            } else {
-//                println!(" elt in insert {}",&elt);
-                tr.insert(*elt,*cond);
-                flag=true;
-
-//                print!("{:?} ",elt);
-//                flag = false;  
-            }
-        }
-//            println!("closure_a: {:?}",&tr);
-        tr
-
-    };
-
-/*
-    let tree_b:BTreeMap<usize,bool>= BTreeMap::new();
-    let mut tree_iter_b=tree_b.into_iter().rev();
-    */
-//    let mut tree1:BTreeMap<usize,bool>= BTreeMap::new();
-/*
     loop {
-        let closure_a = |mut flag|-> BTreeMap<usize,bool> {
-            for (elt,cond) in tree1.iter() {
+        let closure_a = |mut flag|-> VecDeque {
+        let closure = |mut flag| {
+            let mut tr = VecDeque::new();
+            for elt in tree1.iter() {
     //            println!("flag before if {}",flag);
     //            println!("elt before if {}",elt);
                     
@@ -80,34 +47,7 @@ fn main() {
     //                println!("flag in insert {}",flag);
                 } else {
     //                println!(" elt in insert {}",&elt);
-                    tr.insert(*elt,*cond);
-                    flag=true;
-
-    //                print!("{:?} ",elt);
-    //                flag = false;  
-                }
-            }
-//            println!("closure_a: {:?}",&tr);
-            tr
-
-        };
-        let closure_b = |mut flag| {
-            let mut tr = BTreeMap::new();
-            for (elt,cond) in tree1.iter() {
-    //            println!("flag before if {}",flag);
-    //            println!("elt before if {}",elt);
-                    
-                if flag == true {
-                    print!("{:?} ",&elt);
-                    flag = false;  
-
-    //                println!("flag in insert {}",flag);
-    //                tree1.insert(*elt,*cond);
-    //                flag=true;
-    //                println!("flag in insert {}",flag);
-                } else {
-    //                println!(" elt in insert {}",&elt);
-                    tr.insert(*elt,*cond);
+                    tr.push(*elt);
                     flag=true;
 
     //                print!("{:?} ",elt);
@@ -118,15 +58,7 @@ fn main() {
             tr
         };
 //        let mut tree1:BTreeMap<usize,bool>=BTreeMap::new();
-        if direction == true {
             tree1=closure_a(false);
-            direction = false;
-//            println!("tree1: {:?}, direction: {:?}, size: {:?}", &tree1, &direction,&tree1.keys().len());
-        } else {
-            tree1=closure_a(false);
-//            println!("tree1: {:?}, direction: {:?}, size: {:?}", &tree1, &direction,&tree1.keys().len());
-            direction = true;
-        }
 //        print!("after closure call");
         let size = &tree1.keys().len();
 //        println!("size :{:?}",size);
@@ -138,5 +70,4 @@ fn main() {
 //        print!("after match)");
 //        break;
     }
-*/
 }
