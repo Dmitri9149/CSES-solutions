@@ -21,13 +21,13 @@ fn main() {
         .unwrap()
         .parse::<usize>()
         .unwrap();
-    let mut vect:Vec<usize>=Vec::new();
+    let mut vect:Vec<usize>=Vec::with_capacity(100000);
     for i in 1..= total {
         vect
             .push(i);
     }
     let mut elt:usize;
-    let mut vect1:Vec<usize>=Vec::new();
+    let mut vect1:Vec<usize>=Vec::with_capacity(100000);
     let mut quant;
     let mut size;
     loop {
@@ -86,6 +86,6 @@ fn main() {
             break;
         }
         vect=vect1;
-        vect1=vec![];
+        vect1=Vec::with_capacity(100000);
     }
 }
