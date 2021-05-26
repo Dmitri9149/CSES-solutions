@@ -34,13 +34,19 @@ fn main() {
         size = vect.len();
         if size >= step +1 {
 
+/*
             let rest = size - (size / (step+1))*(step+1);
 //            if rest != 0  {
                 vect1 = vect[(size-rest)..size].to_owned();
 //            }
 //            println!("rest {} vect1 {:?}",&rest, &vect1);
+*/
+
+            let new_point = (size/(step+1))*(step+1);
+            vect1 = vect[new_point..size].to_owned();
+
             let mut iter1 = vect.iter();
-            for i in 0..(size - rest) {
+            for i in 0..new_point {
                 elt = *iter1.next().unwrap();
                 if (i+1)%(step+1)==0 {
                     print!("{:?} ",elt);
