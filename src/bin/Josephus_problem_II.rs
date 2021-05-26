@@ -28,16 +28,15 @@ fn main() {
     }
     let mut elt:usize;
     let mut vect1:Vec<usize>=Vec::new();
-    let mut counter = 0;
+    let mut quant;
+    let mut size;
     loop {
-        let size = vect.len();
+        size = vect.len();
         if size >= step +1 {
 
             let rest = size - (size / (step+1))*(step+1);
             if rest != 0  {
-                for i in 0..step {
                 vect1 = vect[(size-rest)..size].to_owned();
-                }
             }
 //            println!("rest {} vect1 {:?}",&rest, &vect1);
             let mut iter1 = vect.iter();
@@ -55,33 +54,38 @@ fn main() {
 //                print!("{} ",elt);
 //            }
         } else {
-            let mut quant = step%size;
+//            quant = step%size;
+            quant = step -(step/size)*size;
+//            println!("quant {}",&quant);
             let mut iter1 = vect.iter();
 
             let rest = size - (quant+1); 
             if rest != 0  {
-                for i in 0..step {
                 vect1 = vect[(size-rest)..size].to_owned();
-                }
             }
-            for i in 0..(size-rest) {
+ 
+            for i in 0..quant {
                 elt = *iter1.next().unwrap();
+                vect1.push(elt);
+            }
+            elt = *iter1.next().unwrap();
+            print!("{} ",elt);            
+/*
+            for i in 0..(size - rest) {
+                elt = *iter1.next().unwrap();
+
                 if (i+1)%(quant+1)==0  {
                     print!("{:?} ",elt);
                 } else {
                     vect1.push(elt);
                 }
             }
+*/
         }
         if vect1.len() == 0 {
             break;
         }
         vect=vect1;
         vect1=vec![];
-/*
-        println!("vect: {:?}", &vect);
-        counter+=1;
-        if counter == 8 {break;}
-*/
     }
 }
