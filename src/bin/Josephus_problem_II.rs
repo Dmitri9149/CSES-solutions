@@ -27,7 +27,7 @@ fn main() {
             .push(i);
     }
     let mut elt:usize;
-    let mut vect1:Vec<usize>=Vec::with_capacity(100000);
+    let mut vect1;;
     let mut quant;
     let mut size;
     loop {
@@ -35,9 +35,9 @@ fn main() {
         if size >= step +1 {
 
             let rest = size - (size / (step+1))*(step+1);
-            if rest != 0  {
+//            if rest != 0  {
                 vect1 = vect[(size-rest)..size].to_owned();
-            }
+//            }
 //            println!("rest {} vect1 {:?}",&rest, &vect1);
             let mut iter1 = vect.iter();
             for i in 0..(size - rest) {
@@ -60,9 +60,9 @@ fn main() {
             let mut iter1 = vect.iter();
 
             let rest = size - (quant+1); 
-            if rest != 0  {
+//            if rest != 0  {
                 vect1 = vect[(size-rest)..size].to_owned();
-            }
+//            }
  
             for i in 0..quant {
                 elt = *iter1.next().unwrap();
@@ -86,6 +86,6 @@ fn main() {
             break;
         }
         vect=vect1;
-        vect1=Vec::with_capacity(100000);
+//        vect1=Vec::with_capacity(100000);
     }
 }
