@@ -46,14 +46,21 @@ fn main() {
             }
         } else {
             quant = step -(step/size)*size;
-            iter1 = vect.iter();
-                vect1 = vect[(quant+1) as usize ..size as usize].to_owned(); 
-            for i in 0..quant {
+            if quat == 0 {
+                println!("{} ",&vect[0].unwrap());
+                vect1=vect[1..];
+            } else {
+
+                iter1 = vect.iter();
+                    vect1 = vect[(quant+1) as usize ..size as usize].to_owned(); 
+                for i in 0..quant {
+                    elt = *iter1.next().unwrap();
+                    vect1.push(elt);
+                }
                 elt = *iter1.next().unwrap();
-                vect1.push(elt);
+                print!("{} ",elt);            
+
             }
-            elt = *iter1.next().unwrap();
-            print!("{} ",elt);            
         }
         if vect1.len() == 0 {
             break;
