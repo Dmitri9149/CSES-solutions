@@ -1,6 +1,7 @@
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
+use std::convert::TryInto;
 
 fn main() {
     let stdin = io::stdin();
@@ -14,26 +15,25 @@ fn main() {
     let total = iter
         .next()
         .unwrap()
-        .parse::<usize>()
+        .parse::<u32>()
         .unwrap();
     let step = iter
         .next()
         .unwrap()
-        .parse::<usize>()
+        .parse::<u32>()
         .unwrap();
-    let mut vect:Vec<usize>=Vec::with_capacity(100000);
-    for i in 1..= total {
-        vect
-            .push(i);
-    }
-    let mut elt:usize;
+    let mut vect:Vec<u32>=(1..=total).collect();
+    let mut iter1;
+    let mut elt:u32;
     let mut vect1;;
-    let mut quant;
-    let mut size;
+    let mut quant:u32;
+    let mut size:u32;
+    let mut delta;
     loop {
-        size = vect.len();
-        if size >= step +1 {
+        size = vect.len() as u32;
+        if size >= (step +1) as u32 {
 
+<<<<<<< HEAD
 /*
             let rest = size - (size / (step+1))*(step+1);
 //            if rest != 0  {
@@ -47,51 +47,43 @@ fn main() {
 
             let mut iter1 = vect.iter();
             for i in 0..new_point {
+=======
+            delta = (size / (step+1))*(step+1);
+                vect1 = vect[delta as usize..size as usize].to_owned();
+            iter1 = vect.iter();
+            for i in 0..delta {
+>>>>>>> j_p_u32
                 elt = *iter1.next().unwrap();
                 if (i+1)%(step+1)==0 {
                     print!("{:?} ",elt);
                 } else {
-//                    println!("push elt {}",&elt);
                     vect1.push(elt);
                 }
             }
-//        } else if size == step {
-//            for elt in vect.iter() {
-//                print!("{} ",elt);
-//            }
+        } else if size == (step +1) as u32 {
+            print!("{} ",&vect.pop().unwrap());
+            vect1=vect;
         } else {
-//            quant = step%size;
             quant = step -(step/size)*size;
-//            println!("quant {}",&quant);
-            let mut iter1 = vect.iter();
+            if quant == 0 {
+                print!("{} ",&vect[0]);
+                vect1=vect[1..].to_vec();
+            } else {
 
-            let rest = size - (quant+1); 
-//            if rest != 0  {
-                vect1 = vect[(size-rest)..size].to_owned();
-//            }
- 
-            for i in 0..quant {
-                elt = *iter1.next().unwrap();
-                vect1.push(elt);
-            }
-            elt = *iter1.next().unwrap();
-            print!("{} ",elt);            
-/*
-            for i in 0..(size - rest) {
-                elt = *iter1.next().unwrap();
-
-                if (i+1)%(quant+1)==0  {
-                    print!("{:?} ",elt);
-                } else {
+                iter1 = vect.iter();
+                    vect1 = vect[(quant+1) as usize ..size as usize].to_owned(); 
+                for i in 0..quant {
+                    elt = *iter1.next().unwrap();
                     vect1.push(elt);
                 }
+                elt = *iter1.next().unwrap();
+                print!("{} ",elt);            
+
             }
-*/
         }
         if vect1.len() == 0 {
             break;
         }
         vect=vect1;
-//        vect1=Vec::with_capacity(100000);
     }
 }
