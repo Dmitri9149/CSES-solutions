@@ -44,11 +44,14 @@ fn main() {
                     vect1.push(elt);
                 }
             }
+        } else if size == (step +1) as u32 {
+            print!("{} ",&vect.pop().unwrap());
+            vect1=vect;
         } else {
             quant = step -(step/size)*size;
-            if quat == 0 {
-                println!("{} ",&vect[0].unwrap());
-                vect1=vect[1..];
+            if quant == 0 {
+                print!("{} ",&vect[0]);
+                vect1=vect[1..].to_vec();
             } else {
 
                 iter1 = vect.iter();
