@@ -17,30 +17,31 @@ Constraints
 1≤n≤5000
 −109≤xi≤109
 */
+// Some ideas are taken from this intersting 
+// C++ solution : https://medium.com/intellectually-yours/cses-removal-game-d1a0c2753d8d
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
 
 pub struct Scores {
-    scores:Vec<Vec<(i32,i32)>>,
+    scores:Vec<Vec<(i64,i64)>>,
 }
 impl Scores {
-    pub fn new(coins:&Vec<i32>) -> Scores {
+    pub fn new(coins:&Vec<i64>) -> Scores {
 // size equal to the n in the task 
         let size = coins.len() -1;
-// we will work in with indices from 1... to size + 1
-        let mut scores:Vec<Vec<(i32,i32)>> = vec![vec![(0,0);size+1];size+1];
+// we will work with indices from 1... to size + 1
+        let mut scores:Vec<Vec<(i64,i64)>> = vec![vec![(0,0);size+1];size+1];
 // base scores , first player correspond to first position in (a,b)
         for i in 1..=size {
             scores[i][i] = (coins[i],0);
         }
-//        println!("scores: {:?}",scores);
         Scores {
             scores:scores,
         }
     }
 }
-pub fn read_lines() -> Vec<i32> {
+pub fn read_lines() -> Vec<i64> {
     let stdin = io::stdin();
     let iter:SplitWhitespace;
     let mut iter_line = stdin.lock().lines();
@@ -49,7 +50,7 @@ pub fn read_lines() -> Vec<i32> {
         .unwrap()
         .expect("failed to read first line")
         .parse::<usize>().unwrap();
-    let mut vect:Vec<i32>= Vec::with_capacity((number+1));
+    let mut vect:Vec<i64>= Vec::with_capacity(number+1);
     let line = iter_line
         .next()
         .unwrap()
@@ -57,27 +58,21 @@ pub fn read_lines() -> Vec<i32> {
     iter = line.split_whitespace();
     vect.push(0);
     for elt in iter {
-        vect.push(elt.parse::<i32>().unwrap());
+        vect.push(elt.parse::<i64>().unwrap());
     }
     vect
 }
 
 fn main() {
-    let mut coins = read_lines();
+    let coins = read_lines();
     let size = coins.len() -1;
     let mut scores = Scores::new(&coins);
-    let mut l = 1;// the length of interval i..=j
-    let mut i =1;
-    let mut j =i+l;
+    let mut l = 1;// l is for the length of interval i..j
     while l < size {
-        i = 1;
-        j = 1+l;
-//    println!("l {}",l);
-//    println!("scores: {:?}",scores.scores);
-
+        let mut i = 1;
+        let mut j = 1+l;
         while j <= size {
-//            println!("i {}, j {}", i,j);
-            if (coins[i] + scores.scores[i+1][j].1 >= coins[j] + scores.scores[i][j-1].1) {
+            if coins[i] + scores.scores[i+1][j].1 >= coins[j] + scores.scores[i][j-1].1 {
                 scores.scores[i][j] = (coins[i] + scores.scores[i+1][j].1, scores.scores[i+1][j].0);
             } else {
                 scores.scores[i][j] = (coins[j] + scores.scores[i][j-1].1, scores.scores[i][j-1].0);
