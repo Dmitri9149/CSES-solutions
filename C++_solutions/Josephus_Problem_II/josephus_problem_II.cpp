@@ -36,7 +36,7 @@ int main(){
     cout<<*(set.find_by_order(pos))<<" ";
     set.erase(*(set.find_by_order(pos)));
   }
-  cout<<*(set.find_by_order(0))<<endl;
+  cout<<*(set.find_by_order(0))<<"\n";
 }
 
 
