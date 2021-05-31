@@ -4,6 +4,7 @@ use std::collections::BTreeMap;
 use std::io;
 use std::str::SplitWhitespace;
 use std::collections::BTreeSet;
+use std::collections::HashSet;
 
 fn powerset<T>(s: &[T]) -> Vec<Vec<&T>> {
     (0..2usize.pow(s.len() as u32)).map(|i| {
@@ -51,18 +52,22 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
 
 fn main() {
     let (integers, subarrays,collection) = read_lines();
-    let mut check:BTreeSet<Vec<&usize>>=BTreeSet::new();
-    let mut candidate;
     let mut counter:usize=0;
-    for i in 0..integers-1 {
-        for j  in  i+1..=integers {
-            candidate = collection[i..j].to_vec();
-            candidate.sort();
-            candidate.dedup();
-            if candidate.len() <= subarrays {
-                counter+=1;
-//                println!("i {} and j {}", i, j);
-//                println!("candidate: {:?}", candidate);
+    let mut temp:HashSet<Vec<usize>>=HashSet::with_capacity(integers);
+    for i in 0..integers {
+    let mut check:HashSet<usize>=HashSet::with_capacity(subarrays +1);
+    let mut temp_vec:Vec<usize>=vec![];
+        for j  in  i..integers {
+            temp_vec.push(collection[j]);
+            check.insert(collection[j]);
+            if check.len() <= subarrays {
+                if temp.insert(temp_vec.to_owned()) {
+                    counter+=1;
+                    println!("i {} and j {}", i, j);
+//                    println!("check: {:?}", check); 
+                  println!("counts {}",counter);
+                    println!("temp {:?}",temp);
+                }
             } else {
                 break;
             }          
