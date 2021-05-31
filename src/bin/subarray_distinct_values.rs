@@ -26,25 +26,13 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
         .next()
         .unwrap()
         .parse::<usize>().unwrap();
-    println!("integers {}", &integers);
+//    println!("integers {}", &integers);
     let subarrays = fst_line_iter
         .next()
         .unwrap()
         .parse::<usize>().unwrap();
-    println!("subarrays {}", &subarrays);
+//    println!("subarrays {}", &subarrays);
 
-/*
-    let integers = iter_line
-        .next()
-        .unwrap()
-        .expect("failed to read first line")
-        .parse::<usize>().unwrap();
-    let subarrays = iter_line
-        .next()
-        .unwrap()
-        .expect("failed to read second line")
-        .parse::<usize>().unwrap();
-*/
     let mut collection:Vec<usize> = Vec::with_capacity(integers);
     let mut index = 0;
     let mut seed = 0;
@@ -53,7 +41,7 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
         iter = input.split_whitespace();
         for i in 0..integers {
             seed = iter.next().unwrap().parse::<usize>().unwrap();
-            println!("index {} and seed {}", &index, &seed);
+//            println!("index {} and seed {}", &index, &seed);
             collection.push(seed);
         }
         break;
@@ -64,19 +52,22 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
 fn main() {
     let (integers, subarrays,collection) = read_lines();
     let mut check:BTreeSet<Vec<&usize>>=BTreeSet::new();
-    println!(" {}  {}  {:?}", &integers,&subarrays,&collection);
-    let mut counter =0;
-    for mut elt in (0..2usize.pow(integers as u32)).map(|i| {
-         collection.iter().enumerate().filter(|&(t, _)| (i >> t) % 2 == 1)
-             .map(|(_, element)| element).collect::<Vec<&usize>>()}) {    
-        let elt_original = elt.to_owned();
-        elt.sort();
-        elt.dedup();
-        if elt.len() <= subarrays && check.insert(elt_original.to_owned()) {
-            println!("{:?}",&elt_original);
-            counter+=1;
-        }
+    let mut candidate;
+    let mut counter:usize=0;
+    for i in 0..integers-1 {
+        for j  in  i+1..=integers {
+            candidate = collection[i..j].to_vec();
+            candidate.sort();
+            candidate.dedup();
+            if candidate.len() <= subarrays {
+                counter+=1;
+//                println!("i {} and j {}", i, j);
+//                println!("candidate: {:?}", candidate);
+            } else {
+                break;
+            }          
+        }   
     }
-    println!("counter {}",counter);
+    println!("{}",counter+1);
 }
 
