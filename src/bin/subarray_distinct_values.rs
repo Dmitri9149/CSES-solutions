@@ -1,9 +1,16 @@
-// https://cses.fi/alon/task/1164
 //
 use std::io::{BufRead};
 use std::collections::BTreeMap;
 use std::io;
 use std::str::SplitWhitespace;
+
+fn powerset<T>(s: &[T]) -> Vec<Vec<&T>> {
+    (0..2usize.pow(s.len() as u32)).map(|i| {
+         s.iter().enumerate().filter(|&(t, _)| (i >> t) % 2 == 1)
+                             .map(|(_, element)| element)
+                             .collect()
+     }).collect()
+}
 
 pub fn read_lines() -> (usize,usize,Vec<usize>) {
     let stdin = io::stdin();
@@ -38,5 +45,10 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
 
 fn main() {
     let (integers, subarrays,collection) = read_lines();
+    for elt in (0..2usize.pow(integers as u32)).map(|i| {
+         collection.iter().enumerate().filter(|&(t, _)| (i >> t) % 2 == 1)
+             .map(|(_, element)| element).collect::<Vec<&usize>>()}) {    
+        println!("{:?}",elt);
+    }
 }
 
