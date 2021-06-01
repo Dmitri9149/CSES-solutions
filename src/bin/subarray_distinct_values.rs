@@ -1,12 +1,13 @@
-//
+//https://cses.fi/alon/task/2428
 use std::io::{BufRead};
 use std::collections::BTreeMap;
 use std::io;
 use std::str::SplitWhitespace;
 use std::collections::BTreeSet;
+use std::collections::HashMap;
 use std::collections::HashSet;
 
-pub fn read_lines() -> (usize,usize,Vec<usize>) {
+pub fn read_lines() -> (usize,usize,Vec<u32>) {
     let stdin = io::stdin();
     let mut iter:SplitWhitespace; 
     let mut iter_line = stdin.lock().lines();
@@ -24,13 +25,13 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
         .unwrap()
         .parse::<usize>().unwrap();
 
-    let mut collection:Vec<usize> = Vec::with_capacity(integers);
+    let mut collection:Vec<u32> = Vec::with_capacity(integers);
     let mut seed = 0;
     for line in iter_line {
         let input = line.expect("Failed to last line");
         iter = input.split_whitespace();
         for i in 0..integers {
-            seed = iter.next().unwrap().parse::<usize>().unwrap();
+            seed = iter.next().unwrap().parse::<u32>().unwrap();
             collection.push(seed);
         }
         break;
@@ -43,7 +44,7 @@ fn main() {
     let mut count:usize=0;
     let mut left:usize=0;
     let mut right:usize=0;
-    let mut map:BTreeMap<usize,usize>= BTreeMap::new();
+    let mut map:HashMap<u32,u32>= HashMap::with_capacity(integers);
     while right < integers {
         *map
             .entry(collection[right])
