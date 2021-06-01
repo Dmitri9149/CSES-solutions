@@ -28,31 +28,28 @@ pub fn read_lines() -> (usize,usize) {
 
 fn main() {
     let (aa, bb) = read_lines();
-    if aa == 1 {
-        print!("{}",bb-1);
-    } else if bb ==1 {
-        print!("{}",aa-1);
-    } else if aa == bb {
-        print!("{}",aa -1);
-    }  
-
-
-    let mut count:usize=0;
-    let mut n = 1;
-    let mut sizes:(usize, usize);
-    sizes = (cmp::max(aa,bb),cmp::min(aa,bb));
-    let mut sizes_new:(usize,usize);
-// aa to be less than bb
-    loop  {
-        println!("sizes  {:?}",sizes);
-        if sizes.0 == sizes.1 {
-            print!("{}",count);
-            break;
-        }
-        sizes_new=(sizes.0-sizes.1,sizes.1);
-        sizes = (cmp::max(sizes_new.0,sizes_new.1),cmp::min(sizes_new.0,sizes_new.1));
-        println!("after sizes new sizes are {:?}",sizes);
-        n+=1;
-        count+=1;
+    let mut res:Vec<Vec<usize>>= Vec::with_capacity(aa+1);
+    let mut internal:Vec<usize>=Vec::with_capacity(bb+1);
+    for i in 0..=bb {
+        internal.push(std::u32::MAX as usize);
     }
+    for i in 0..=aa {
+        res.push(internal.to_owned());
+    }
+    for  i in 0..=aa {
+        for  j in 0..=bb {
+            if i == j {
+                res[i][j] = 0;
+            } else {
+//                res[i][j] = usize::MAX;
+                for  k in 1..i {
+                    res[i][j] = cmp::min(res[i][j], res[k][j]+res[i-k][j]+1);
+                }
+                for  k in 1..j {
+                    res[i][j] = cmp::min(res[i][j], res[i][k]+res[i][j-k]+1);
+                }
+            }
+        }
+    }
+    println!("{}",res[aa][bb]);
 }
