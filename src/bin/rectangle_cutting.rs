@@ -3,6 +3,7 @@ use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
 use std::collections::HashMap;
+use std::cmp;
 
 pub fn read_lines() -> (usize,usize) {
     let stdin = io::stdin();
@@ -27,9 +28,31 @@ pub fn read_lines() -> (usize,usize) {
 
 fn main() {
     let (aa, bb) = read_lines();
-    let mut count:usize=0;
-    let mut left:usize=0;
-    let mut right:usize=0;
-    println!("{}",aa);
-}
+    if aa == 1 {
+        print!("{}",bb-1);
+    } else if bb ==1 {
+        print!("{}",aa-1);
+    } else if aa == bb {
+        print!("{}",aa -1);
+    }  
 
+
+    let mut count:usize=0;
+    let mut n = 1;
+    let mut sizes:(usize, usize);
+    sizes = (cmp::max(aa,bb),cmp::min(aa,bb));
+    let mut sizes_new:(usize,usize);
+// aa to be less than bb
+    loop  {
+        println!("sizes  {:?}",sizes);
+        if sizes.0 == sizes.1 {
+            print!("{}",count);
+            break;
+        }
+        sizes_new=(sizes.0-sizes.1,sizes.1);
+        sizes = (cmp::max(sizes_new.0,sizes_new.1),cmp::min(sizes_new.0,sizes_new.1));
+        println!("after sizes new sizes are {:?}",sizes);
+        n+=1;
+        count+=1;
+    }
+}
