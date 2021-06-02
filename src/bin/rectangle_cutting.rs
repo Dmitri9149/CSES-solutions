@@ -1,4 +1,4 @@
-https://cses.fi/alon/task/1744/
+//https://cses.fi/alon/task/1744/
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
