@@ -1,13 +1,10 @@
 //https://cses.fi/alon/task/1744/
 use std::io::{BufRead};
 use std::io;
-use std::str::SplitWhitespace;
-use std::collections::HashMap;
 use std::cmp;
 
 pub fn read_lines() -> (u32,u32) {
     let stdin = io::stdin();
-    let mut iter:SplitWhitespace; 
     let mut iter_line = stdin.lock().lines();
     let first_line = iter_line
         .next()
