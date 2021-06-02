@@ -5,7 +5,7 @@ use std::str::SplitWhitespace;
 use std::collections::HashMap;
 use std::cmp;
 
-pub fn read_lines() -> (u16,u16) {
+pub fn read_lines() -> (u32,u32) {
     let stdin = io::stdin();
     let mut iter:SplitWhitespace; 
     let mut iter_line = stdin.lock().lines();
@@ -17,11 +17,11 @@ pub fn read_lines() -> (u16,u16) {
     let aa = fst_line_iter
         .next()
         .unwrap()
-        .parse::<u16>().unwrap();
+        .parse::<u32>().unwrap();
     let bb = fst_line_iter
         .next()
         .unwrap()
-        .parse::<u16>().unwrap();
+        .parse::<u32>().unwrap();
 
     (aa, bb)
 }
