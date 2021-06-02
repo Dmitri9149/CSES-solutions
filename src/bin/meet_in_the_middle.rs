@@ -4,7 +4,7 @@ use std::io;
 use std::str::SplitWhitespace;
 use std::collections::HashMap;
 
-pub fn read_lines() -> (usize,usize,Vec<u32>) {
+pub fn read_lines() -> (usize,u32,Vec<u32>,Vec<u32>) {
     let stdin = io::stdin();
     let mut iter:SplitWhitespace; 
     let mut iter_line = stdin.lock().lines();
@@ -20,20 +20,28 @@ pub fn read_lines() -> (usize,usize,Vec<u32>) {
     let subarrays = fst_line_iter
         .next()
         .unwrap()
-        .parse::<usize>().unwrap();
+        .parse::<u32>().unwrap();
 
-    let mut collection:Vec<u32> = Vec::with_capacity(integers);
+    let mut collection1:Vec<u32> = Vec::with_capacity(integers);
+    let mut collection2:Vec<u32> = Vec::with_capacity(integers);
     let mut seed = 0;
     for line in iter_line {
         let input = line.expect("Failed to last line");
         iter = input.split_whitespace();
-        for _i in 0..integers {
+        for _i in 0..(integers/2) {
+//            println!("{}",_i);
             seed = iter.next().unwrap().parse::<u32>().unwrap();
-            collection.push(seed);
+            collection1.push(seed);
         }
+        for _i in (integers/2)..integers {
+//            println!("new {}",_i);
+            seed = iter.next().unwrap().parse::<u32>().unwrap();
+            collection2.push(seed);
+        }
+
         break;
     }
-    (integers, subarrays,collection)
+    (integers, subarrays,collection1,collection2)
 }
 
 fn powerset<T>(s: &[T]) -> Vec<Vec<&T>> {
@@ -53,12 +61,45 @@ fn summ(s: &[u32]) -> Vec<u32> {
      }).collect()
 }
 fn main() {
-    let (integers, subarrays,collection) = read_lines();
+    let (total,sub_sum,set1,set2) = read_lines();
     let mut count:usize=0;
-    let mut left:usize=0;
-    let mut right:usize=0;
-    let mut sums:Vec<u32>= Vec::with_capacity(integers);
-    sums = summ(&collection);
-    println!("{:?}",sums);
+//    let mut left;
+//    let mut right;
+    if total == 1 && sub_sum == 1{
+        println!("{}",sub_sum);
+        return ()
+    }
+    let mut sums1:Vec<u32>= Vec::with_capacity(total/2);
+    let mut sums2:Vec<u32>= Vec::with_capacity(total-total/2);
+
+    sums1 = summ(&set1);
+    sums1.sort();
+    sums2 = summ(&set2);
+    sums2.sort();
+
+    let mut state; 
+    let mut left_iter;
+    if true {    //sums1.len() < sums2.len() {
+        left_iter = sums1.iter();
+        loop {
+            match left_iter.next() {
+                None => break,
+                Some(x) => state = x,
+
+            }
+            if state > &sub_sum {
+                break;
+            }
+            for elt in sums2.iter() {
+                if state + elt == sub_sum {
+                    count+=1;
+                } else if state + elt > sub_sum {
+                    break;
+                }
+            }            
+        }
+    }
+//    println!("{:?}    {:?}",&sums1,&sums2);
+    println!("{}",count);
 }
 
