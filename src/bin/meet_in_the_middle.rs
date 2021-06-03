@@ -3,6 +3,8 @@ use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
 use std::collections::BTreeMap;
+use std::collections::HashMap;
+
 
 pub fn read_lines() -> (usize,usize,Vec<usize>,Vec<usize>) {
     let stdin = io::stdin();
@@ -42,7 +44,7 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,Vec<usize>) {
     (integers, subarrays,collection1,collection2)
 }
 
-fn summ(s: &[usize]) -> BTreeMap<usize,usize> {
+fn summ_to_btree(s: &[usize]) -> BTreeMap<usize,usize> {
     let mut tree:BTreeMap<usize,usize> = BTreeMap::new();
     for elt in (0..2usize.pow(s.len()as u32)).map(|i| {
         s.iter().enumerate().filter(|&(t, _)| (i >> t) % 2 == 1)
@@ -54,6 +56,20 @@ fn summ(s: &[usize]) -> BTreeMap<usize,usize> {
     }
     tree
 }
+fn summ_to_hash(s: &[usize]) -> HashMap<usize,usize> {
+    let mut hash:HashMap<usize,usize> = HashMap::new();
+    for elt in (0..2usize.pow(s.len()as u32)).map(|i| {
+        s.iter().enumerate().filter(|&(t, _)| (i >> t) % 2 == 1)
+        .map(|(_, element)| *element).sum()
+    }) {
+        *hash
+            .entry(elt)
+            .or_insert(0)+=1;
+    }
+    hash
+}
+
+
 fn main() {
     let (total,sub_sum,set1,set2) = read_lines();
     let mut count:usize=0;
@@ -61,8 +77,8 @@ fn main() {
         println!("{}",sub_sum);
         return ()
     }
-    let sums1 = summ(&set1);
-    let sums2 = summ(&set2);
+    let sums1 = summ_to_btree(&set1);
+    let sums2 = summ_to_hash(&set2);
     let mut state; 
     let mut left_iter;
     left_iter = sums1.iter();
