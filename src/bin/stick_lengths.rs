@@ -33,7 +33,7 @@ fn main() {
     let med = data[size / 2];
     let mut b:i64 = 0;
     for elt in data {
-        b+= (elt as i64 - med as i64).abs()
+        b+= (elt as u64 - med as u64).abs()
     }
     print!("{}",b);
 }
