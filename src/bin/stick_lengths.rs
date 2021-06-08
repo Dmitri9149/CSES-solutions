@@ -35,7 +35,5 @@ fn main() {
     for elt in data {
         b+= (elt as i64 - med as i64).abs()
     }
-
     print!("{}",b);
 }
-
