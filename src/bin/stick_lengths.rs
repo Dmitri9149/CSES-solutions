@@ -3,7 +3,7 @@ use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
 
-pub fn read_lines() -> Vec<i64> {
+pub fn read_lines() -> (usize,Vec<usize>) {
     let stdin = io::stdin();
     let iter:SplitWhitespace;
     let mut iter_line = stdin.lock().lines();
@@ -12,20 +12,22 @@ pub fn read_lines() -> Vec<i64> {
         .unwrap()
         .expect("failed to read first line")
         .parse::<usize>().unwrap();
-    let mut vect:Vec<i64>= Vec::with_capacity(number+1);
+    let mut vect:Vec<usize>= Vec::with_capacity(number);
     let line = iter_line
         .next()
         .unwrap()
         .expect("failed to read second line");
     iter = line.split_whitespace();
-    vect.push(0);
     for elt in iter {
-        vect.push(elt.parse::<i64>().unwrap());
+        vect.push(elt.parse::<usize>().unwrap());
     }
-    vect
+    if number != vect.len() {
+        panic!("declared lenght and real lengths are different, panic!");
+    }
+    (number,vect)
 }
 
 fn main() {
-    let coins = read_lines();
-    print!("some output");
+    let data = read_lines();
+    print!("data : {:?}", data);
 }
