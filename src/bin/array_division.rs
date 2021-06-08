@@ -28,7 +28,7 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
         let input = line.expect("Failed to last line");
         iter = input.split_whitespace();
         for _i in 0..integers {
-            seed = iter.next().unwrap().parse::<u32>().unwrap();
+            seed = iter.next().unwrap().parse::<usize>().unwrap();
             collection.push(seed);
         }
         break;
