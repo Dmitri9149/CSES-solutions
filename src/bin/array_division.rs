@@ -35,9 +35,50 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
     }
     (integers, subarrays,collection)
 }
+pub fn isPossible(value:&usize, collection:&Vec<usize>, n:&usize, k:&usize) -> bool {
+    let mut count = 0;
+    let mut sum = 0;
+    for elt in collection.iter() {
+        if elt > value {
+            return false
+        }
+        sum +=elt;
 
+        if sum > *value {
+            count+=1;
+            sum = *elt;
+        }
+    }
+    count+=1;
+
+    if count <= *k {
+        true
+    } else {
+        false
+    }
+}
+pub fn minMax(collection:&Vec<usize>, n:&usize, k:&usize) -> usize {
+    let mut start = collection.iter().max().unwrap().to_owned();
+    let mut end = 0;
+    let mut res=0;
+    let mut value;
+    for elt in collection.iter() {
+        end+=elt;
+    }
+    while start <= end {
+        value = (start+end) / 2 ;
+        if isPossible(&value,collection,n,k) {
+            res = value;
+            end = value -1;
+        } else {
+            start = (value + 1);
+        }
+
+    }
+    return res
+}
 fn main() {
     let (integers, subarrays,collection) = read_lines();
-    println!("smth");
+    println!("{}",minMax(&collection,&integers,&subarrays));
 }
 
