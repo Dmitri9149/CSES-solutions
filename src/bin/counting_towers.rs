@@ -22,7 +22,16 @@ pub fn how_many(n:&usize) -> ([usize;1000002],[usize;1000002]){
     (dp_0,dp_1)
 }
 fn main() {
-    let (dp_0, dp_1) = how_many(&1000000);
+    let mut dp_0 = [0;1000002];
+    let mut dp_1 = [0;1000002];
+    dp_0[1]=1;
+    dp_1[1]=1;
+    dp_0[2]=3;
+    dp_1[2]=5;
+    for i in 3..=1000000 {
+        dp_0[i]=(dp_0[i-1]*2 + dp_1[i-1])%MOD;
+        dp_1[i]=(dp_1[i-1]*4+dp_0[i-1])%MOD;
+    }
     let stdin = io::stdin();
     let mut iter_line = stdin.lock().lines();
     let mut number = iter_line
@@ -32,7 +41,6 @@ fn main() {
         .parse::<usize>().unwrap();
     let mut seed:usize;
     let mut input;
-    let mut biggest=1; 
     let mut res;
     for line in iter_line {
         input = line.expect("Failed to read line");
