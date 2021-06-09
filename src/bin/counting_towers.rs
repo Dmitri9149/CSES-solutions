@@ -5,7 +5,7 @@ use std::io;
 use std::str::SplitWhitespace;
 const MOD:usize = 1000000000 +7;
 
-pub fn read_lines() -> (Vec<usize>,usize) {
+pub fn read_lines() -> (Vec<usize>,usize,usize) {
     let stdin = io::stdin();
     let mut iter:SplitWhitespace; 
     let mut iter_line = stdin.lock().lines();
@@ -17,21 +17,25 @@ pub fn read_lines() -> (Vec<usize>,usize) {
     let mut vect:Vec<usize> = Vec::with_capacity(number);
     let mut seed:usize=0;
     let mut input;
+    let mut biggest=1; 
     for line in iter_line {
         input = line.expect("Failed to read line");
         seed = input.parse::<usize>().unwrap();
         vect.push(seed);
         number-=1;
         if number == 0 {
+            biggest = seed;
             break;
         }
     }
-    (vect,number)
+    vect.sort();
+    (vect,number,biggest)
 }
 
-pub fn how_many(n:&usize) {
+pub fn how_many(collection:&Vec<usize>) -> BTreeMap<usize,usize> {
     let mut dp_0 = HashMap::with_capacity(*n);
     let mut dp_1 = HashMap::with_capacity(*n);
+    let mut tree:BTreeMap<usize,usize>= BTreeMap::new();
     if *n == 1 {
         println!("{}",&2);
         return ()
@@ -39,6 +43,9 @@ pub fn how_many(n:&usize) {
         println!("{}",&8);
         return ()
     } 
+    iter = collection.iter();
+    dp_0.insert(1,1);
+    dp_1.insert(1,1);
     dp_0.insert(2,3);
     dp_1.insert(2,5);
     let mut ins_0=3;
@@ -53,7 +60,7 @@ pub fn how_many(n:&usize) {
     ()
 }
 fn main() {
-    let (collection,tests) = read_lines();
+    let (collection,tests,biggest) = read_lines();
     let mut count=0;
     let mut end = 0;
     for elt in collection.iter() {
