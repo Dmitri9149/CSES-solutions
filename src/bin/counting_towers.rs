@@ -3,32 +3,6 @@ use std::collections::HashMap;
 use std::io;
 const MOD:usize = 1000000000 +7;
 
-pub fn read_lines() -> (Vec<usize>,usize) {
-    let stdin = io::stdin();
-    let mut iter_line = stdin.lock().lines();
-    let mut number = iter_line
-        .next()
-        .unwrap()
-        .expect("failed to read next line")
-        .parse::<usize>().unwrap();
-    let mut vect:Vec<usize> = Vec::with_capacity(number);
-    let mut seed:usize;
-    let mut input;
-    let mut biggest=1; 
-    for line in iter_line {
-        input = line.expect("Failed to read line");
-        seed = input.parse::<usize>().unwrap();
-        vect.push(seed);
-        if seed > biggest {
-            biggest = seed;
-        }
-        number-=1;
-        if number == 0 {
-            break;
-        }
-    }
-    (vect,biggest)
-}
 
 pub fn how_many(n:&usize) -> (HashMap<usize,usize>,HashMap<usize,usize>){
     let mut dp_0 = HashMap::with_capacity(n+1);
@@ -48,12 +22,27 @@ pub fn how_many(n:&usize) -> (HashMap<usize,usize>,HashMap<usize,usize>){
     (dp_0,dp_1)
 }
 fn main() {
-    let (collection,biggest) = read_lines();
+    let (dp_0, dp_1) = how_many(&1000000);
+    let stdin = io::stdin();
+    let mut iter_line = stdin.lock().lines();
+    let mut number = iter_line
+        .next()
+        .unwrap()
+        .expect("failed to read next line")
+        .parse::<usize>().unwrap();
+    let mut seed:usize;
+    let mut input;
+    let mut biggest=1; 
     let mut res;
-    let (dp_0, dp_1) = how_many(&biggest);
-    for elt in collection.iter() {
-        res = (dp_0.get(elt).unwrap() + dp_1.get(elt).unwrap())%MOD;
+    for line in iter_line {
+        input = line.expect("Failed to read line");
+        seed = input.parse::<usize>().unwrap();
+        res = (dp_0.get(&seed).unwrap() + dp_1.get(&seed).unwrap())%MOD;
         println!("{}",res);
+        number-=1;
+        if number == 0 {
+            break;
+        }
     }
 }
 
