@@ -1,13 +1,10 @@
 use std::io::{BufRead};
-use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::io;
-use std::str::SplitWhitespace;
 const MOD:usize = 1000000000 +7;
 
-pub fn read_lines() -> (Vec<usize>,usize,usize) {
+pub fn read_lines() -> (Vec<usize>,usize) {
     let stdin = io::stdin();
-    let mut iter:SplitWhitespace; 
     let mut iter_line = stdin.lock().lines();
     let mut number = iter_line
         .next()
@@ -15,7 +12,7 @@ pub fn read_lines() -> (Vec<usize>,usize,usize) {
         .expect("failed to read next line")
         .parse::<usize>().unwrap();
     let mut vect:Vec<usize> = Vec::with_capacity(number);
-    let mut seed:usize=0;
+    let mut seed:usize;
     let mut input;
     let mut biggest=1; 
     for line in iter_line {
@@ -30,18 +27,18 @@ pub fn read_lines() -> (Vec<usize>,usize,usize) {
             break;
         }
     }
-    (vect,number,biggest)
+    (vect,biggest)
 }
 
 pub fn how_many(n:&usize) -> (HashMap<usize,usize>,HashMap<usize,usize>){
-    let mut dp_0 = HashMap::with_capacity((n+1));
-    let mut dp_1 = HashMap::with_capacity((n+1));
+    let mut dp_0 = HashMap::with_capacity(n+1);
+    let mut dp_1 = HashMap::with_capacity(n+1);
     dp_0.insert(1,1);
     dp_1.insert(1,1);
     dp_0.insert(2,3);
     dp_1.insert(2,5);
-    let mut ins_0=3;
-    let mut ins_1=5;
+    let mut ins_0;
+    let mut ins_1;
     for i in 3..=*n {
         ins_0 = (dp_0.get(&(i-1)).unwrap()*2 + dp_1.get(&(i-1)).unwrap())%MOD;
         ins_1 = (dp_1.get(&(i-1)).unwrap()*4+dp_0.get(&(i-1)).unwrap())%MOD;
@@ -51,9 +48,8 @@ pub fn how_many(n:&usize) -> (HashMap<usize,usize>,HashMap<usize,usize>){
     (dp_0,dp_1)
 }
 fn main() {
-    let (collection,tests,biggest) = read_lines();
+    let (collection,biggest) = read_lines();
     let mut res;
-    let mut end = 0;
     let (dp_0, dp_1) = how_many(&biggest);
     for elt in collection.iter() {
         res = (dp_0.get(elt).unwrap() + dp_1.get(elt).unwrap())%MOD;
