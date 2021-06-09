@@ -4,20 +4,20 @@ use std::io;
 const MOD:usize = 1000000000 +7;
 
 
-pub fn how_many(n:&usize) -> (HashMap<usize,usize>,HashMap<usize,usize>){
-    let mut dp_0 = HashMap::with_capacity(n+1);
-    let mut dp_1 = HashMap::with_capacity(n+1);
-    dp_0.insert(1,1);
-    dp_1.insert(1,1);
-    dp_0.insert(2,3);
-    dp_1.insert(2,5);
+pub fn how_many(n:&usize) -> ([usize;1000002],[usize;1000002]){
+    let mut dp_0 = [0;1000002];
+    let mut dp_1 = [0;1000002];
+    dp_0[1]=1;
+    dp_1[1]=1;
+    dp_0[2]=3;
+    dp_1[2]=5;
     let mut ins_0;
     let mut ins_1;
     for i in 3..=*n {
-        ins_0 = (dp_0.get(&(i-1)).unwrap()*2 + dp_1.get(&(i-1)).unwrap())%MOD;
-        ins_1 = (dp_1.get(&(i-1)).unwrap()*4+dp_0.get(&(i-1)).unwrap())%MOD;
-        dp_0.insert(i,ins_0);
-        dp_1.insert(i,ins_1);
+        ins_0 = (dp_0[i-1]*2 + dp_1[i-1])%MOD;
+        ins_1 = (dp_1[i-1]*4+dp_0[i-1])%MOD;
+        dp_0[i]=ins_0;
+        dp_1[i]=ins_1;
     }
     (dp_0,dp_1)
 }
@@ -37,7 +37,7 @@ fn main() {
     for line in iter_line {
         input = line.expect("Failed to read line");
         seed = input.parse::<usize>().unwrap();
-        res = (dp_0.get(&seed).unwrap() + dp_1.get(&seed).unwrap())%MOD;
+        res = (dp_0[seed] + dp_1[seed])%MOD;
         println!("{}",res);
         number-=1;
         if number == 0 {
