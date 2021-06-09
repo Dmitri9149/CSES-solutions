@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::io;
 use std::str::SplitWhitespace;
+const MOD:usize = 1000000000 +7;
 
 pub fn read_lines() -> (Vec<usize>,usize) {
     let stdin = io::stdin();
@@ -43,12 +44,12 @@ pub fn how_many(n:&usize) {
     let mut ins_0=3;
     let mut ins_1=5;
     for i in 3..=*n {
-        ins_0 = dp_0.get(&(i-1)).unwrap()*2 + dp_1.get(&(i-1)).unwrap();
-        ins_1 = dp_1.get(&(i-1)).unwrap()*4+dp_0.get(&(i-1)).unwrap();
+        ins_0 = (dp_0.get(&(i-1)).unwrap()*2 + dp_1.get(&(i-1)).unwrap())%MOD;
+        ins_1 = (dp_1.get(&(i-1)).unwrap()*4+dp_0.get(&(i-1)).unwrap())%MOD;
         dp_0.insert(i,ins_0);
         dp_1.insert(i,ins_1);
     }
-    println!("{}", (ins_0 + ins_1) % (1000000000 + 7));
+    println!("{}", (ins_0 + ins_1) % MOD);
     ()
 }
 fn main() {
