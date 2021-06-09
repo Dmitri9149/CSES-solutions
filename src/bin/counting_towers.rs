@@ -22,28 +22,20 @@ pub fn read_lines() -> (Vec<usize>,usize,usize) {
         input = line.expect("Failed to read line");
         seed = input.parse::<usize>().unwrap();
         vect.push(seed);
+        if seed > biggest {
+            biggest = seed;
+        }
         number-=1;
         if number == 0 {
-            biggest = seed;
             break;
         }
     }
-    vect.sort();
     (vect,number,biggest)
 }
 
-pub fn how_many(collection:&Vec<usize>) -> BTreeMap<usize,usize> {
-    let mut dp_0 = HashMap::with_capacity(*n);
-    let mut dp_1 = HashMap::with_capacity(*n);
-    let mut tree:BTreeMap<usize,usize>= BTreeMap::new();
-    if *n == 1 {
-        println!("{}",&2);
-        return ()
-    } else if *n == 2 {
-        println!("{}",&8);
-        return ()
-    } 
-    iter = collection.iter();
+pub fn how_many(n:&usize) -> (HashMap<usize,usize>,HashMap<usize,usize>){
+    let mut dp_0 = HashMap::with_capacity((n+1));
+    let mut dp_1 = HashMap::with_capacity((n+1));
     dp_0.insert(1,1);
     dp_1.insert(1,1);
     dp_0.insert(2,3);
@@ -56,17 +48,16 @@ pub fn how_many(collection:&Vec<usize>) -> BTreeMap<usize,usize> {
         dp_0.insert(i,ins_0);
         dp_1.insert(i,ins_1);
     }
-    println!("{}", (ins_0 + ins_1) % MOD);
-    ()
+    (dp_0,dp_1)
 }
 fn main() {
     let (collection,tests,biggest) = read_lines();
-    let mut count=0;
+    let mut res;
     let mut end = 0;
+    let (dp_0, dp_1) = how_many(&biggest);
     for elt in collection.iter() {
-        how_many(elt);
+        res = (dp_0.get(elt).unwrap() + dp_1.get(elt).unwrap())%MOD;
+        println!("{}",res);
     }
-//    println!("{:?}   {}",&collection,&tests);
-//    println!(" if 6 {}", how_many(&6));
 }
 
