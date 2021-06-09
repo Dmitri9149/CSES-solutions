@@ -2,7 +2,6 @@
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
-use std::collections::HashMap;
 
 pub fn read_lines() -> (usize,usize,Vec<usize>) {
     let stdin = io::stdin();
@@ -23,7 +22,7 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
         .parse::<usize>().unwrap();
 
     let mut collection:Vec<usize> = Vec::with_capacity(integers);
-    let mut seed = 0;
+    let mut seed;
     for line in iter_line {
         let input = line.expect("Failed to last line");
         iter = input.split_whitespace();
@@ -35,7 +34,7 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
     }
     (integers, subarrays,collection)
 }
-pub fn isPossible(value:&usize, collection:&Vec<usize>, n:&usize, k:&usize) -> bool {
+pub fn is_possible(value:&usize, collection:&Vec<usize>,k:&usize) -> bool {
     let mut count = 0;
     let mut sum = 0;
     for elt in collection.iter() {
@@ -57,7 +56,7 @@ pub fn isPossible(value:&usize, collection:&Vec<usize>, n:&usize, k:&usize) -> b
         false
     }
 }
-pub fn minMax(collection:&Vec<usize>, n:&usize, k:&usize) -> usize {
+pub fn min_max(collection:&Vec<usize>,k:&usize) -> usize {
     let mut start = collection.iter().max().unwrap().to_owned();
     let mut end = 0;
     let mut res=0;
@@ -67,11 +66,11 @@ pub fn minMax(collection:&Vec<usize>, n:&usize, k:&usize) -> usize {
     }
     while start <= end {
         value = (start+end) / 2 ;
-        if isPossible(&value,collection,n,k) {
+        if is_possible(&value,&collection,&k) {
             res = value;
             end = value -1;
         } else {
-            start = (value + 1);
+            start = value + 1;
         }
 
     }
@@ -79,6 +78,6 @@ pub fn minMax(collection:&Vec<usize>, n:&usize, k:&usize) -> usize {
 }
 fn main() {
     let (integers, subarrays,collection) = read_lines();
-    println!("{}",minMax(&collection,&integers,&subarrays));
+    println!("{}",min_max(&collection,&subarrays));
 }
 
