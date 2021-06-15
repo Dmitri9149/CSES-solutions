@@ -4,6 +4,9 @@ use std::io;
 use std::str::SplitWhitespace;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
+use std::cmp;
+
+const MAXLENGTH:usize = 200005;
 
 
 pub fn read_lines() -> (usize,usize,Vec<usize>,Vec<usize>) {
@@ -46,7 +49,27 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,Vec<usize>) {
     (hotels,rooms,collection1,collection2)
 }
 
+pub struct SegmentTree {
+    pub tree:[usize;MAXLENGTH*4]
+}
 
+impl SegmentTree {
+    pub fn new() -> SegmentTree {
+        SegmentTree {tree:[0;MAXLENGTH*4]}
+    }
+    pub fn build_tree(&mut self, l:&usize,r:&usize,node:&usize,vect:&Vec<usize>) {
+        let mut mid; 
+        if (l==r) {
+            self.tree[*node]=vect[*l];
+        } else {
+            mid = (l + r) / 2;
+            self.build_tree(&l,&mid,&(node*2),vect);
+            self.build_tree(&(mid+1), &r, &(node*2 +1),vect);
+            self.tree[*node] = cmp::max(self.tree[node*2],self.tree[node*2+1]);
+        }
+    }
+
+}
 
 fn main() {
     let (hotels,rooms,set1,set2) = read_lines();
