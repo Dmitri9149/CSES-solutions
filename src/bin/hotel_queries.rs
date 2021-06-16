@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::cmp;
 
-const MAXLENGTH:usize = 200005;
+const MAXLENGTH:usize = 20005;
 
 
 pub fn read_lines() -> (usize,usize,Vec<usize>,Vec<usize>) {
@@ -59,6 +59,7 @@ impl SegmentTree {
     }
     pub fn build_tree(&mut self, l:&usize,r:&usize,node:&usize,vect:&Vec<usize>) {
         let mut mid; 
+        println!("in build");
         if (l==r) {
             self.tree[*node]=vect[*l];
         } else {
@@ -87,6 +88,19 @@ impl SegmentTree {
 
 fn main() {
     let (hotels,rooms,set1,set2) = read_lines();
-    println!("{:?}  {:?}",set1,set2);
+    let mut segment_tree = SegmentTree::new();
+
+    segment_tree.build_tree(&1,&hotels,&1,&set1);
+
+    println!("after build");
+    for elt in set2.iter() {
+        if segment_tree.tree[1] < *elt {
+            print!("{}",&0);
+        } else {
+            segment_tree.update(&1,&hotels,&1,elt);
+        }
+    }
+
+//    println!("{:?}  {:?}",set1,set2);
 }
 
