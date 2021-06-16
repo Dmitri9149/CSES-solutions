@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::cmp;
 
-const MAXLENGTH:usize = 20005;
+const MAXLENGTH:usize = 200005;
 
 
 pub fn read_lines() -> (usize,usize,Vec<usize>,Vec<usize>) {
@@ -59,9 +59,9 @@ impl SegmentTree {
     }
     pub fn build_tree(&mut self, l:&usize,r:&usize,node:&usize,vect:&Vec<usize>) {
         let mut mid; 
-        println!("in build");
+//        println!("in build");
         if (l==r) {
-            self.tree[*node]=vect[*l];
+            self.tree[*node]=vect[(l-1)];
         } else {
             mid = (l + r) / 2;
             self.build_tree(&l,&mid,&(node*2),vect);
@@ -71,17 +71,18 @@ impl SegmentTree {
     }
     pub fn update(&mut self, l:&usize,r:&usize,node:&usize,val:&usize) {
         let mut mid;
+//        println!("inupdate");
         if l == r {
             self.tree[*node] -=val;
-            print!("{}",l);
+            print!("{} ",l);
         } else {
             mid = (l + r) /2 ;
             if self.tree[*node * 2 ] >= *val {
                 self.update(&l,&mid,&(node *2),&val);
             } else {
-                self.update(&l,&(mid+1),&r,&(node *2 +1));
+                self.update(&(mid+1),&r,&(node *2 +1),&val);
             }
-            self.tree[*node] = cmp::max(self.tree[*node * 2],self.tree[*node * 2 +1])
+            self.tree[*node] = cmp::max(self.tree[*node * 2],self.tree[*node * 2 +1]);
         }
     }
 }
@@ -92,10 +93,10 @@ fn main() {
 
     segment_tree.build_tree(&1,&hotels,&1,&set1);
 
-    println!("after build");
+//    println!("after build");
     for elt in set2.iter() {
         if segment_tree.tree[1] < *elt {
-            print!("{}",&0);
+            print!("{} ",&0);
         } else {
             segment_tree.update(&1,&hotels,&1,elt);
         }
