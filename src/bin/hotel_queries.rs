@@ -68,7 +68,21 @@ impl SegmentTree {
             self.tree[*node] = cmp::max(self.tree[node*2],self.tree[node*2+1]);
         }
     }
-
+    pub fn update(&mut self, l:&usize,r:&usize,node:&usize,val:&usize) {
+        let mut mid;
+        if l == r {
+            self.tree[*node] -=val;
+            print!("{}",l);
+        } else {
+            mid = (l + r) /2 ;
+            if self.tree[*node * 2 ] >= *val {
+                self.update(&l,&mid,&(node *2),&val);
+            } else {
+                self.update(&l,&(mid+1),&r,&(node *2 +1));
+            }
+            self.tree[*node] = cmp::max(self.tree[*node * 2],self.tree[*node * 2 +1])
+        }
+    }
 }
 
 fn main() {
