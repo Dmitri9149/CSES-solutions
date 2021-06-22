@@ -3,7 +3,7 @@ use std::io::{BufRead};
 use std::io;
 use std::cmp;
 
-pub fn read_lines() -> (u32,u32) {
+pub fn read_lines() -> (usize,usize) {
     let stdin = io::stdin();
     let mut iter_line = stdin.lock().lines();
     let first_line = iter_line
@@ -14,11 +14,11 @@ pub fn read_lines() -> (u32,u32) {
     let aa = fst_line_iter
         .next()
         .unwrap()
-        .parse::<u32>().unwrap();
+        .parse::<usize>().unwrap();
     let bb = fst_line_iter
         .next()
         .unwrap()
-        .parse::<u32>().unwrap();
+        .parse::<usize>().unwrap();
 
     (aa, bb)
 }
