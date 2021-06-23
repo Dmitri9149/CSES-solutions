@@ -21,9 +21,6 @@ pub fn read_lines() -> (usize,Vec<u32>) {
     for elt in iter {
         vect.push(elt.parse::<u32>().unwrap());
     }
-//    if number != vect.len() {
-//        panic!("declared lenght and real lengths are different, panic!");
-//    }
     (number,vect)
 }
  
