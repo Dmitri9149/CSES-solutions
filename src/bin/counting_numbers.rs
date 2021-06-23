@@ -19,7 +19,6 @@ pub fn read_lines() -> (usize,usize) {
         .next()
         .unwrap()
         .parse::<usize>().unwrap();
-
     (aa, bb)
 }
 
@@ -70,7 +69,7 @@ fn main() {
         dp_xx.num(n);
         dp_xx.calc(0,0,0,0).unwrap()
     };
-    let res_b = closure(bb);
-    let res_a = closure(aa-1);
-    print!("{}", res_b - res_a);
+//    let res_b = closure(bb);
+//    let res_a = closure(aa-1);
+    print!("{}", closure(bb) - closure(aa-1));
 }
