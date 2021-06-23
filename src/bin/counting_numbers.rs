@@ -33,9 +33,7 @@ impl Dp {
             dp:[[[[None;19];10];2];2],
             num:Vec::with_capacity(19),
         }
-
     }
-
     pub fn num(&mut self, mut n:usize) {
         while n > 0 {
             self.num.push(n % 10);
@@ -46,7 +44,6 @@ impl Dp {
     pub fn calc(&mut self,pos:usize,dig:usize,zeros:usize,range:usize) -> Option<usize> {
         if pos == self.num.len() {return Some(1)};
         if self.dp[range][zeros][dig][pos] != None {return self.dp[range][zeros][dig][pos]};
-
         let mut res = 0;
         let lmt = if zeros == 1 {9} else {self.num[pos]};
         let mut handle_zeros;
@@ -54,7 +51,7 @@ impl Dp {
         for i in 0..=lmt {
             handle_zeros = if zeros == 1 || (i < lmt) {1} else {0};
             handle_range = if range == 1 || (i > 0) {1} else {0};
-            if (i != dig || (!(range == 1)  && i == 0)) {
+            if (i != dig || (range == 0  && i == 0)) {
                 res += self.calc(pos +1, i,handle_zeros,handle_range).unwrap();
             }
         }
