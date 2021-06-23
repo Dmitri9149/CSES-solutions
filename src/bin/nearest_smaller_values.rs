@@ -28,14 +28,30 @@ fn main() {
     let (size,mut data) = read_lines();
     let mut stack:Vec<(u32,u32)> = Vec::with_capacity(size);
     for (i,elt) in data.iter().enumerate() {
-        while stack.len() > 0 && stack[stack.len()-1].1 >= *elt {
-            stack.pop();
+        let mut length;
+        let mut last;
+        loop {
+            length = stack.len();
+            if length == 0 {
+                print!("{} ",0);
+                break;
+            }
+            last = stack[stack.len()-1];
+            if last.1 >= *elt {
+                stack.pop();
+            } else {
+                print!("{} ",last.0+1);
+                break;
+            }
         }
-        if stack.len() == 0 {
-            print!("{} ",0);
-        } else {
-            print!("{} ",stack[stack.len()-1].0+1);
-        }
+//        while stack.len() > 0 && stack[stack.len()-1].1 >= *elt {
+//            stack.pop();
+//        }
+//        if stack.len() == 0 {
+//            print!("{} ",0);
+//        } else {
+//            print!("{} ",stack[stack.len()-1].0+1);
+//        }
         stack.push((i.try_into().unwrap(),*elt));
     }
 }
