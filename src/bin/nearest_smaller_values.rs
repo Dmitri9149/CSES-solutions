@@ -2,6 +2,7 @@
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
+use std::convert::TryInto;
  
 pub fn read_lines() -> (usize,Vec<u32>) {
     let stdin = io::stdin();
@@ -21,15 +22,24 @@ pub fn read_lines() -> (usize,Vec<u32>) {
     for elt in iter {
         vect.push(elt.parse::<u32>().unwrap());
     }
-
     if number != vect.len() {
         panic!("declared lenght and real lengths are different, panic!");
     }
-
     (number,vect)
 }
  
 fn main() {
     let (size,mut data) = read_lines();
-    print!("{:?}  {:?}",size,data);
+    let mut stack:Vec<(u32,u32)> = Vec::with_capacity(size);
+    for i in 0..size {
+        while stack.len() > 0 && stack[stack.len()-1].1 >= data[i] {
+            stack.pop();
+        }
+        if stack.len() == 0 {
+            print!("{} ",0);
+        } else {
+            print!("{} ",stack[stack.len()-1].0+1);
+        }
+        stack.push((i.try_into().unwrap(),data[i]));
+    }
 }
