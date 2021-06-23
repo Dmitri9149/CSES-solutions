@@ -1,7 +1,7 @@
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
-use std::convert::TryInto;
+//use std::convert::TryInto;
  
 pub fn read_lines() -> (usize,Vec<u32>) {
     let stdin = io::stdin();
@@ -25,7 +25,7 @@ pub fn read_lines() -> (usize,Vec<u32>) {
 }
  
 fn main() {
-    let (size,mut data) = read_lines();
+    let (size, data) = read_lines();
     let mut stack:Vec<(u32,u32)> = Vec::with_capacity(size);
     for (i,elt) in data.iter().enumerate() {
         let mut length;
@@ -36,7 +36,7 @@ fn main() {
                 print!("{} ",0);
                 break;
             }
-            last = stack[stack.len()-1];
+            last = stack[length-1];
             if last.1 >= *elt {
                 stack.pop();
             } else {
@@ -54,6 +54,5 @@ fn main() {
 //        }
 //        stack.push((i.try_into().unwrap(),*elt));
         stack.push((i as u32,*elt));
-
     }
 }
