@@ -61,15 +61,15 @@ impl Dp {
 
 fn main() {
     let (mut aa, bb) = read_lines();
-    if aa == 0 {aa = std::usize::MAX};
     let mut closure = |n| -> usize {
         let mut dp_xx = Dp::new();
-        if n == (std::usize::MAX -1) {return 0};
         if n == 0 {return 1};
         dp_xx.num(n);
         dp_xx.calc(0,0,0,0).unwrap()
     };
-//    let res_b = closure(bb);
-//    let res_a = closure(aa-1);
-    print!("{}", closure(bb) - closure(aa-1));
+    if aa == 0 {
+        print!("{}", closure(bb));
+    } else {
+        print!("{}", closure(bb) - closure(aa-1));
+    }
 }
