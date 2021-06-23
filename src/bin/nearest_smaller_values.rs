@@ -52,6 +52,8 @@ fn main() {
 //        } else {
 //            print!("{} ",stack[stack.len()-1].0+1);
 //        }
-        stack.push((i.try_into().unwrap(),*elt));
+//        stack.push((i.try_into().unwrap(),*elt));
+        stack.push((i as u32,*elt));
+
     }
 }
