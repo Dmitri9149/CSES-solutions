@@ -21,17 +21,17 @@ pub fn read_lines() -> (usize,Vec<u32>) {
     for elt in iter {
         vect.push(elt.parse::<u32>().unwrap());
     }
-    if number != vect.len() {
-        panic!("declared lenght and real lengths are different, panic!");
-    }
+//    if number != vect.len() {
+//        panic!("declared lenght and real lengths are different, panic!");
+//    }
     (number,vect)
 }
  
 fn main() {
     let (size,mut data) = read_lines();
     let mut stack:Vec<(u32,u32)> = Vec::with_capacity(size);
-    for i in 0..size {
-        while stack.len() > 0 && stack[stack.len()-1].1 >= data[i] {
+    for (i,elt) in data.iter().enumerate() {
+        while stack.len() > 0 && stack[stack.len()-1].1 >= *elt {
             stack.pop();
         }
         if stack.len() == 0 {
@@ -39,6 +39,6 @@ fn main() {
         } else {
             print!("{} ",stack[stack.len()-1].0+1);
         }
-        stack.push((i.try_into().unwrap(),data[i]));
+        stack.push((i.try_into().unwrap(),*elt));
     }
 }
