@@ -23,7 +23,7 @@ pub fn read_lines() -> (usize,usize,Vec<usize>) {
     let mut collection:Vec<usize> = Vec::with_capacity(machines);
     let mut seed;
     for line in iter_line {
-        let input = line.expect("Failed to last line");
+        let input = line.expect("Failed to read last line");
         iter = input.split_whitespace();
         for _i in 0..machines {
             seed = iter.next().unwrap().parse::<usize>().unwrap();
