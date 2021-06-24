@@ -12,31 +12,31 @@ pub fn read_lines() -> (usize,usize,Vec<u32>) {
         .unwrap()
         .expect("failed to read first line");
     let mut fst_line_iter = first_line.split_whitespace();
-    let integers = fst_line_iter
+    let machines = fst_line_iter
         .next()
         .unwrap()
         .parse::<usize>().unwrap();
-    let subarrays = fst_line_iter
+    let products = fst_line_iter
         .next()
         .unwrap()
         .parse::<usize>().unwrap();
 
-    let mut collection:Vec<u32> = Vec::with_capacity(integers);
+    let mut collection:Vec<u32> = Vec::with_capacity(machines);
     let mut seed = 0;
     for line in iter_line {
         let input = line.expect("Failed to last line");
         iter = input.split_whitespace();
-        for _i in 0..integers {
+        for _i in 0..machines {
             seed = iter.next().unwrap().parse::<u32>().unwrap();
             collection.push(seed);
         }
         break;
     }
-    (integers, subarrays,collection)
+    (machines, products,collection)
 }
 
 fn main() {
-    let (integers, subarrays,collection) = read_lines();
-    println!("{:?} {:?} {:?}",integers, subarrays,collection);
+    let (machines, products,collection) = read_lines();
+    println!("{:?} {:?} {:?}",machines, products,collection);
 }
 
