@@ -57,6 +57,14 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
 
     (values,queries,collection,qrs)
 }
+pub fn constructIndex(s:usize,e:usize) -> usize {
+    s + (e-s) / 2 
+}
+
+pub struct SegmentTree {
+    tree:[0;(200000.log2() + 1) / 1],
+}
+
 
 fn main() {
     let (values,queries,collection,qrs) = read_lines();
