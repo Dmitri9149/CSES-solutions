@@ -2,6 +2,9 @@ use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
 use std::collections::HashMap;
+
+//const MAXSIZE:usize= 2*2_usize.pow(200000f64.log2().ceil() as u32);
+const MAXSIZE:usize = 524288 -1; // calculated from the 200000 array size
 pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
     let stdin = io::stdin();
     let mut iter:SplitWhitespace; 
@@ -57,12 +60,37 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
 
     (values,queries,collection,qrs)
 }
-pub fn constructIndex(s:usize,e:usize) -> usize {
+pub fn constructMidNode(s:usize,e:usize) -> usize {
     s + (e-s) / 2 
 }
 
 pub struct SegmentTree {
-    tree:[0;(200000.log2() + 1) / 1],
+    pub tree:[usize;MAXSIZE],
+}
+
+impl SegmentTree {
+    pub fn new() -> SegmentTree {
+        SegmentTree {
+            tree:[0;MAXSIZE],
+        }
+    }
+    pub fn from_array(&mut self,arr:&[usize;200000],start:usize,end:usize,current_node:usize) -> usize {
+        let mut res;
+        if start == end {
+            res = arr[start];
+            self.tree[current_node]=res;
+            return res
+        }
+
+        let mid = constructMidNode(start,end);
+        res = self.from_array(arr,start,mid,current_node*2+1) + 
+            self.from_array(arr, mid+1,end,current_node*2 + 1);
+            self.tree[current_node]=res;
+            return res
+    }
+    pub fn construct_tree(&mut self,arr:&[usize;200000]) {
+        self.from_array(arr,0,200000 - 1, 0);
+    }
 }
 
 
