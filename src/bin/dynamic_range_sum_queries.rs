@@ -91,6 +91,18 @@ impl SegmentTree {
     pub fn construct_tree(&mut self,arr:&[usize;200000]) {
         self.from_array(arr,0,200000 - 1, 0);
     }
+    pub fn getSumHelper(&mut self,start:usize, end:usize
+                        ,qstart:usize,qend:usize,current_node:usize) 
+        -> usize {
+            if qstart <= start && qend >= end {
+                return self.tree[current_node];
+            } else if end < qstart || start > qend {
+                return 0;
+            }
+            let mid = constructMidNode(start,end);
+            return self.getSumHelper(start, mid, qstart,qend,2*current_node +1) + 
+                self.getSumHelper(mid+1,end,qstart,qend,2*current_node +2);
+    }
 }
 
 
