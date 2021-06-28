@@ -79,11 +79,11 @@ impl SegmentTree {
     pub fn from_array(&mut self, array:&Vec<usize>,start:usize,end:usize,current_node:usize) -> usize {
         let mut res;
         if start == end {
-            println!("start {}",start);
-            println!("array {:?}",array);
+//            println!("start {}",start);
+//            println!("array {:?}",array);
             res = array[start];
-            println!("current_node {}",current_node);
-            println!("tree length {}",self.tree.len());
+//            println!("current_node {}",current_node);
+//            println!("tree length {}",self.tree.len());
             self.tree[current_node]=res;
             return res
         }
@@ -110,24 +110,38 @@ impl SegmentTree {
                 self.get_sum_helper(mid+1,end,qstart,qend,2*current_node +2);
     }
     pub fn update_value_helper(&mut self, start:usize
-                             ,end:usize, index:usize, diff:usize, current_node:usize) {
+                             ,end:usize, index:usize, diff:usize, flag_diff:bool,current_node:usize) {
         if index < start || index > end {
             return ();
         }
-        self.tree[current_node] = self.tree[current_node] + diff;
+        if flag_diff == true {
+            self.tree[current_node] = self.tree[current_node] + diff;
+        } else {
+            self.tree[current_node] = self.tree[current_node] - diff;
+        }
         if end != start {
             let mid = construct_mid_node(start,end);
-            self.update_value_helper(start,mid,index,diff,2*current_node +1);
-            self.update_value_helper(mid+1,end,index,diff,2*current_node +2);
+            self.update_value_helper(start,mid,index,diff,flag_diff,2*current_node +1);
+            self.update_value_helper(mid+1,end,index,diff,flag_diff,2*current_node +2);
         }
     }
     pub fn update_value(&mut self, array:&mut Vec<usize>, values:usize, index:usize, new_value:usize) {
         if index < 0 || index > values -1 {
             panic!("Wrong index");
         }
-        let diff = new_value - array[index];
+//        println!("new_value {}",&new_value);
+//        println!("array[index] {}",&array[index]);
+        let mut diff;
+        let mut flag_diff;
+        if new_value > array[index] {
+            diff = new_value - array[index];
+            flag_diff = true;
+        } else {
+            diff = array[index] - new_value;
+            flag_diff = false;
+        }
         array[index]= new_value;
-        self.update_value_helper(0,values-1,index,diff,0);
+        self.update_value_helper(0,values-1,index,diff,flag_diff,0);
     }
     pub fn get_sum(&mut self,values:usize,qstart:usize,qend:usize) -> usize {
         if qstart < 0 || qend > values -1 || qstart > qend {
@@ -145,9 +159,9 @@ fn main() {
     for i in 0..queries {
         query = qrs.get(&i).unwrap();
         if query[0] == 1 {
-            segment_tree.update_value(&mut collection, values, query[1],query[2]);
+            segment_tree.update_value(&mut collection, values, query[1]-1,query[2]);
         } else {
-            println!("{}",segment_tree.get_sum(values,query[1],query[2]));
+            println!("{}",segment_tree.get_sum(values,query[1]-1,query[2]-1));
         }
     }
 //    println!("{} {} {:?} {:?}",values,queries,collection,qrs);
