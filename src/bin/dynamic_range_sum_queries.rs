@@ -2,6 +2,8 @@ use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
 use std::collections::HashMap;
+use segment_tree::SegmentPoint;
+use segment_tree::ops::Add;
 
 pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
     let stdin = io::stdin();
@@ -60,6 +62,17 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
 }
 fn main() {
     let (values,queries,collection,qrs) = read_lines();
-    println!("{} {} {:?} {:?}",values,queries,collection,qrs);
+    let mut tree = SegmentPoint::build(collection, Add);
+    let mut query; 
+    for i in 0..queries {
+        query = qrs.get(&i).unwrap(); 
+        if query[0] == 1 {
+            tree.modify(query[1],query[2]);
+        } else {
+            println!("{}",tree.query(query[1], query[2]));
+
+        }
+    }
+//    println!("{} {} {:?} {:?}",values,queries,collection,qrs);
 }
 
