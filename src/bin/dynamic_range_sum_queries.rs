@@ -73,31 +73,36 @@ pub struct SegmentTree {
 impl SegmentTree {
     pub fn new() -> SegmentTree {
         SegmentTree {
-            tree:Vec::new(),
+            tree:vec![0;MAXSIZE],
         }
     }
     pub fn from_array(&mut self, array:&Vec<usize>,start:usize,end:usize,current_node:usize) -> usize {
         let mut res;
         if start == end {
+            println!("start {}",start);
+            println!("array {:?}",array);
             res = array[start];
+            println!("current_node {}",current_node);
+            println!("tree length {}",self.tree.len());
             self.tree[current_node]=res;
             return res
         }
         let mid = construct_mid_node(start,end);
-        res = self.from_array(array,start,mid,current_node*2+1) + 
-            self.from_array(array,mid+1,end,current_node*2 + 1);
+        res = self.from_array(array,start,mid,current_node*2 + 1) + 
+            self.from_array(array,mid+1,end,current_node*2 + 2);
             self.tree[current_node]=res;
             return res
     }
-    pub fn construct_tree(&mut self, array:&Vec<usize>,end:usize) {
-        self.from_array(array,0,end, 0);
+    pub fn construct_tree(&mut self, array:&Vec<usize>, n:usize) {
+        self.from_array(array,0,n-1, 0);
     }
     pub fn get_sum_helper(&mut self,start:usize, end:usize
                         ,qstart:usize,qend:usize,current_node:usize) 
         -> usize {
             if qstart <= start && qend >= end {
                 return self.tree[current_node];
-            } else if end < qstart || start > qend {
+            }
+            if end < qstart || start > qend {
                 return 0;
             }
             let mid = construct_mid_node(start,end);
@@ -109,7 +114,7 @@ impl SegmentTree {
         if index < start || index > end {
             return ();
         }
-        self.tree[current_node] += diff;
+        self.tree[current_node] = self.tree[current_node] + diff;
         if end != start {
             let mid = construct_mid_node(start,end);
             self.update_value_helper(start,mid,index,diff,2*current_node +1);
@@ -135,7 +140,28 @@ impl SegmentTree {
 fn main() {
     let (values,queries,mut collection,qrs) = read_lines();
     let mut segment_tree = SegmentTree::new();
-    segment_tree.construct_tree(&collection,values);
-    println!("{} {} {:?} {:?}",values,queries,collection,qrs);
+    segment_tree.construct_tree(&mut collection,values);
+    let mut query;
+    for i in 0..queries {
+        query = qrs.get(&i).unwrap();
+        if query[0] == 1 {
+            segment_tree.update_value(&mut collection, values, query[1],query[2]);
+        } else {
+            println!("{}",segment_tree.get_sum(values,query[1],query[2]));
+        }
+    }
+//    println!("{} {} {:?} {:?}",values,queries,collection,qrs);
+/*
+    let mut arr = vec![1, 3, 5, 7, 9, 11];
+    let n = 6;
+    let mut segment_tree_1 = SegmentTree::new();
+    segment_tree_1.construct_tree(&mut arr,n);
+    let summ1 = segment_tree_1.get_sum(6,1,3);
+    println!("{}",summ1);
+    segment_tree_1.update_value(&mut arr,6,1,10);
+    let summ2 = segment_tree_1.get_sum(6,1,3);
+    println!("{}",summ2);
+*/
+
 }
 
