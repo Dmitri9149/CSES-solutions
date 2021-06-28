@@ -3,8 +3,7 @@ use std::io;
 use std::str::SplitWhitespace;
 use std::collections::HashMap;
 
-//const MAXSIZE:usize= 2*2_usize.pow(200000f64.log2().ceil() as u32);
-const MAXSIZE:usize = 524288 -1; // calculated from the 200000 array size
+const MAXSIZE:usize = 524288 -1; // tree max size calculated from the 200000 max input size
 pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
     let stdin = io::stdin();
     let mut iter:SplitWhitespace; 
@@ -24,25 +23,12 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
         .parse::<usize>().unwrap();
 
     let mut collection:Vec<usize> = Vec::with_capacity(values);
-//    let mut collection:[usize;200000] = [0;200000];
     let mut seed;
-/*
-    for line in iter_line {
-        let input = line.expect("Failed to read last line");
-        iter = input.split_whitespace();
-        for _i in 0..machines {
-            seed = iter.next().unwrap().parse::<usize>().unwrap();
-            collection.push(seed);
-        }
-        break;
-    }
-*/
     let second_input = iter_line.next().unwrap().expect("Failed to read seconf line");
     iter = second_input.split_whitespace();
     for i in 0..values {
         seed = iter.next().unwrap().parse::<usize>().unwrap();
         collection.push(seed);
-//        collection[i]=seed;
     }
     let mut lines_number = 0;
     let mut qrs:HashMap<usize,[usize;3]> = HashMap::with_capacity(queries);
@@ -58,18 +44,14 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
         lines_number +=1;
         if lines_number == queries {break};
     }
-
-
     (values,queries,collection,qrs)
 }
 pub fn construct_mid_node(s:usize,e:usize) -> usize {
     s + (e-s) / 2 
 }
-
 pub struct SegmentTree {
     pub tree:Vec<usize>,
 }
-
 impl SegmentTree {
     pub fn new() -> SegmentTree {
         SegmentTree {
@@ -79,11 +61,7 @@ impl SegmentTree {
     pub fn from_array(&mut self, array:&Vec<usize>,start:usize,end:usize,current_node:usize) -> usize {
         let mut res;
         if start == end {
-//            println!("start {}",start);
-//            println!("array {:?}",array);
             res = array[start];
-//            println!("current_node {}",current_node);
-//            println!("tree length {}",self.tree.len());
             self.tree[current_node]=res;
             return res
         }
@@ -115,9 +93,9 @@ impl SegmentTree {
             return ();
         }
         if flag_diff == true {
-            self.tree[current_node] = self.tree[current_node] + diff;
+            self.tree[current_node] += diff;
         } else {
-            self.tree[current_node] = self.tree[current_node] - diff;
+            self.tree[current_node] -= diff;
         }
         if end != start {
             let mid = construct_mid_node(start,end);
@@ -129,15 +107,14 @@ impl SegmentTree {
         if index < 0 || index > values -1 {
             panic!("Wrong index");
         }
-//        println!("new_value {}",&new_value);
-//        println!("array[index] {}",&array[index]);
         let mut diff;
         let mut flag_diff;
-        if new_value > array[index] {
-            diff = new_value - array[index];
+        let old_value = array[index];
+        if new_value > old_value {
+            diff = new_value - old_value;
             flag_diff = true;
         } else {
-            diff = array[index] - new_value;
+            diff = old_value - new_value;
             flag_diff = false;
         }
         array[index]= new_value;
@@ -164,18 +141,5 @@ fn main() {
             println!("{}",segment_tree.get_sum(values,query[1]-1,query[2]-1));
         }
     }
-//    println!("{} {} {:?} {:?}",values,queries,collection,qrs);
-/*
-    let mut arr = vec![1, 3, 5, 7, 9, 11];
-    let n = 6;
-    let mut segment_tree_1 = SegmentTree::new();
-    segment_tree_1.construct_tree(&mut arr,n);
-    let summ1 = segment_tree_1.get_sum(6,1,3);
-    println!("{}",summ1);
-    segment_tree_1.update_value(&mut arr,6,1,10);
-    let summ2 = segment_tree_1.get_sum(6,1,3);
-    println!("{}",summ2);
-*/
-
 }
 
