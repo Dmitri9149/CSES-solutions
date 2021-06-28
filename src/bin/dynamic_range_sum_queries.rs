@@ -5,7 +5,7 @@ use std::collections::HashMap;
 
 //const MAXSIZE:usize= 2*2_usize.pow(200000f64.log2().ceil() as u32);
 const MAXSIZE:usize = 524288 -1; // calculated from the 200000 array size
-pub fn read_lines() -> (usize,usize,[usize;200000],HashMap<usize,[usize;3]>) {
+pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
     let stdin = io::stdin();
     let mut iter:SplitWhitespace; 
     let mut iter_line = stdin.lock().lines();
@@ -23,8 +23,8 @@ pub fn read_lines() -> (usize,usize,[usize;200000],HashMap<usize,[usize;3]>) {
         .unwrap()
         .parse::<usize>().unwrap();
 
-//    let mut collection:Vec<usize> = Vec::with_capacity(values);
-    let mut collection:[usize;200000] = [0;200000];
+    let mut collection:Vec<usize> = Vec::with_capacity(values);
+//    let mut collection:[usize;200000] = [0;200000];
     let mut seed;
 /*
     for line in iter_line {
@@ -41,8 +41,8 @@ pub fn read_lines() -> (usize,usize,[usize;200000],HashMap<usize,[usize;3]>) {
     iter = second_input.split_whitespace();
     for i in 0..values {
         seed = iter.next().unwrap().parse::<usize>().unwrap();
-//        collection.push(seed);
-        collection[i]=seed;
+        collection.push(seed);
+//        collection[i]=seed;
     }
     let mut lines_number = 0;
     let mut qrs:HashMap<usize,[usize;3]> = HashMap::with_capacity(queries);
@@ -67,32 +67,30 @@ pub fn construct_mid_node(s:usize,e:usize) -> usize {
 }
 
 pub struct SegmentTree {
-    pub tree:[usize;MAXSIZE],
-    pub array:[usize;200000],
+    pub tree:Vec<usize>,
 }
 
 impl SegmentTree {
-    pub fn new(array:[usize;200000]) -> SegmentTree {
+    pub fn new() -> SegmentTree {
         SegmentTree {
-            tree:[0;MAXSIZE],
-            array:array
+            tree:Vec::new(),
         }
     }
-    pub fn from_array(&mut self,start:usize,end:usize,current_node:usize) -> usize {
+    pub fn from_array(&mut self, array:&Vec<usize>,start:usize,end:usize,current_node:usize) -> usize {
         let mut res;
         if start == end {
-            res = self.array[start];
+            res = array[start];
             self.tree[current_node]=res;
             return res
         }
         let mid = construct_mid_node(start,end);
-        res = self.from_array(start,mid,current_node*2+1) + 
-            self.from_array(mid+1,end,current_node*2 + 1);
+        res = self.from_array(array,start,mid,current_node*2+1) + 
+            self.from_array(array,mid+1,end,current_node*2 + 1);
             self.tree[current_node]=res;
             return res
     }
-    pub fn construct_tree(&mut self) {
-        self.from_array(0,200000 - 1, 0);
+    pub fn construct_tree(&mut self, array:&Vec<usize>,end:usize) {
+        self.from_array(array,0,end, 0);
     }
     pub fn get_sum_helper(&mut self,start:usize, end:usize
                         ,qstart:usize,qend:usize,current_node:usize) 
@@ -118,12 +116,12 @@ impl SegmentTree {
             self.update_value_helper(mid+1,end,index,diff,2*current_node +2);
         }
     }
-    pub fn update_value(&mut self, values:usize, index:usize, new_value:usize) {
+    pub fn update_value(&mut self, array:&mut Vec<usize>, values:usize, index:usize, new_value:usize) {
         if index < 0 || index > values -1 {
             panic!("Wrong index");
         }
-        let diff = new_value - self.array[index];
-        self.array[index]= new_value;
+        let diff = new_value - array[index];
+        array[index]= new_value;
         self.update_value_helper(0,values-1,index,diff,0);
     }
     pub fn get_sum(&mut self,values:usize,qstart:usize,qend:usize) -> usize {
@@ -135,9 +133,9 @@ impl SegmentTree {
     }
 }
 fn main() {
-    let (values,queries,collection,qrs) = read_lines();
-    let mut segment_tree = SegmentTree::new(collection);
-    segment_tree.construct_tree();
+    let (values,queries,mut collection,qrs) = read_lines();
+    let mut segment_tree = SegmentTree::new();
+    segment_tree.construct_tree(&collection,values);
     println!("{} {} {:?} {:?}",values,queries,collection,qrs);
 }
 
