@@ -1,3 +1,4 @@
+// some tips are from here: https://www.geeksforgeeks.org/segment-tree-set-1-sum-of-given-range/
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
@@ -26,7 +27,7 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
     let mut seed;
     let second_input = iter_line.next().unwrap().expect("Failed to read seconf line");
     iter = second_input.split_whitespace();
-    for i in 0..values {
+    for _i in 0..values {
         seed = iter.next().unwrap().parse::<usize>().unwrap();
         collection.push(seed);
     }
@@ -59,7 +60,7 @@ impl SegmentTree {
         }
     }
     pub fn from_array(&mut self, array:&Vec<usize>,start:usize,end:usize,current_node:usize) -> usize {
-        let mut res;
+        let res;
         if start == end {
             res = array[start];
             self.tree[current_node]=res;
@@ -104,11 +105,11 @@ impl SegmentTree {
         }
     }
     pub fn update_value(&mut self, array:&mut Vec<usize>, values:usize, index:usize, new_value:usize) {
-        if index < 0 || index > values -1 {
+        if index > values -1 {
             panic!("Wrong index");
         }
-        let mut diff;
-        let mut flag_diff;
+        let diff;
+        let flag_diff;
         let old_value = array[index];
         if new_value > old_value {
             diff = new_value - old_value;
@@ -121,7 +122,7 @@ impl SegmentTree {
         self.update_value_helper(0,values-1,index,diff,flag_diff,0);
     }
     pub fn get_sum(&mut self,values:usize,qstart:usize,qend:usize) -> usize {
-        if qstart < 0 || qend > values -1 || qstart > qend {
+        if qend > values -1 || qstart > qend {
             panic!("Wrong start or end index");
         }
 
