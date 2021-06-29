@@ -1,9 +1,7 @@
-// some tips are from here: https://www.geeksforgeeks.org/segment-tree-set-1-sum-of-given-range/
 use std::io::{BufRead};
 use std::io;
 use std::str::SplitWhitespace;
 use std::collections::HashMap;
-use std::collections::BTreeMap;
 use std::cmp;
 //use segment_tree::SegmentPoint;
 //use segment_tree::ops::Add;
