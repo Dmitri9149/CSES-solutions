@@ -4,10 +4,12 @@ use std::io;
 use std::str::SplitWhitespace;
 use std::collections::HashMap;
 use std::collections::BTreeMap;
+use std::cmp;
 //use segment_tree::SegmentPoint;
 //use segment_tree::ops::Add;
 
 const MAXSIZE:usize = 524288 -1; // tree max size calculated from the 200000 max input size
+const MAXVAL:usize = usize::MAX;
 pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
     let stdin = io::stdin();
     let mut iter:SplitWhitespace; 
@@ -51,9 +53,10 @@ pub fn read_lines() -> (usize,usize,Vec<usize>,HashMap<usize,[usize;3]>) {
     }
     (values,queries,collection,qrs)
 }
-pub fn construct_mid_node(s:usize,e:usize) -> usize {
-    s + (e-s) / 2 
+pub fn construct_mid_node(start:usize,end:usize) -> usize {
+    start + (end-start) / 2 
 }
+#[derive(Debug)]
 pub struct SegmentTree {
     pub tree:Vec<usize>,
 }
@@ -71,26 +74,26 @@ impl SegmentTree {
             return res
         }
         let mid = construct_mid_node(start,end);
-        res = self.from_array(array,start,mid,current_node*2 + 1) + 
-            self.from_array(array,mid+1,end,current_node*2 + 2);
+        res = cmp::min(self.from_array(array,start,mid,current_node*2 + 1), 
+            self.from_array(array,mid+1,end,current_node*2 + 2));
             self.tree[current_node]=res;
             return res
     }
     pub fn construct_tree(&mut self, array:&Vec<usize>, n:usize) {
-        self.from_array(array,0,n-1, 0);
+        self.from_array(array,0,n-1,0);
     }
-    pub fn get_sum_helper(&mut self,start:usize, end:usize
+    pub fn get_min_helper(&mut self,start:usize, end:usize
                         ,qstart:usize,qend:usize,current_node:usize) 
         -> usize {
             if qstart <= start && qend >= end {
                 return self.tree[current_node];
             }
             if end < qstart || start > qend {
-                return 0;
+                return MAXVAL;
             }
             let mid = construct_mid_node(start,end);
-            return self.get_sum_helper(start, mid, qstart,qend,2*current_node +1) + 
-                self.get_sum_helper(mid+1,end,qstart,qend,2*current_node +2);
+            return cmp::min(self.get_min_helper(start, mid, qstart,qend,2*current_node +1),
+                self.get_min_helper(mid+1,end,qstart,qend,2*current_node +2));
     }
     pub fn update_value_helper(&mut self, start:usize
                              ,end:usize, index:usize, diff:usize, flag_diff:bool,current_node:usize) {
@@ -125,11 +128,11 @@ impl SegmentTree {
         array[index]= new_value;
         self.update_value_helper(0,values-1,index,diff,flag_diff,0);
     }
-    pub fn get_sum(&mut self,values:usize,qstart:usize,qend:usize) -> usize {
+    pub fn get_min(&mut self,values:usize,qstart:usize,qend:usize) -> usize {
         if qend > values -1 || qstart > qend {
             panic!("Wrong start or end index");
         }
-        return self.get_sum_helper(0,values-1,qstart,qend,0);
+        return self.get_min_helper(0,values-1,qstart,qend,0);
     }
 }
 fn main() {
@@ -141,8 +144,10 @@ fn main() {
         query = qrs.get(&i).unwrap();
         if query[0] == 1 {
             segment_tree.update_value(&mut collection, values, query[1]-1,query[2]);
+            println!("collection {:?}",collection);
+            println!("tree {:?}",segment_tree);
         } else {
-            println!("{}",segment_tree.get_sum(values,query[1]-1,query[2]-1));
+            println!("{}",segment_tree.get_min(values,query[1]-1,query[2]-1));
         }
     }
 }
