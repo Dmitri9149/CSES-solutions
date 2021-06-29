@@ -96,37 +96,30 @@ impl SegmentTree {
                 self.get_min_helper(mid+1,end,qstart,qend,2*current_node +2));
     }
     pub fn update_value_helper(&mut self, start:usize
-                             ,end:usize, index:usize, diff:usize, flag_diff:bool,current_node:usize) {
+                             ,end:usize, index:usize, new_value:usize, current_node:usize) {
         if index < start || index > end {
             return ();
         }
-        if flag_diff == true {
-            self.tree[current_node] += diff;
+        if start == end  {
+            self.tree[current_node] = new_value;
+            return ();
+        }
+        let mid = construct_mid_node(start,end);
+        if index <= mid {
+            self.update_value_helper(start,mid,index,new_value,2*current_node +1);
         } else {
-            self.tree[current_node] -= diff;
+            self.update_value_helper(mid+1,end,index,new_value,2*current_node +2);
         }
-        if end != start {
-            let mid = construct_mid_node(start,end);
-            self.update_value_helper(start,mid,index,diff,flag_diff,2*current_node +1);
-            self.update_value_helper(mid+1,end,index,diff,flag_diff,2*current_node +2);
-        }
+
+        self.tree[current_node]=cmp::min(self.tree[2*current_node+1]
+                                         ,self.tree[2*current_node + 2]);
     }
     pub fn update_value(&mut self, array:&mut Vec<usize>, values:usize, index:usize, new_value:usize) {
         if index > values -1 {
             panic!("Wrong index");
         }
-        let diff;
-        let flag_diff;
-        let old_value = array[index];
-        if new_value > old_value {
-            diff = new_value - old_value;
-            flag_diff = true;
-        } else {
-            diff = old_value - new_value;
-            flag_diff = false;
-        }
         array[index]= new_value;
-        self.update_value_helper(0,values-1,index,diff,flag_diff,0);
+        self.update_value_helper(0,values-1,index,new_value,0);
     }
     pub fn get_min(&mut self,values:usize,qstart:usize,qend:usize) -> usize {
         if qend > values -1 || qstart > qend {
@@ -144,8 +137,8 @@ fn main() {
         query = qrs.get(&i).unwrap();
         if query[0] == 1 {
             segment_tree.update_value(&mut collection, values, query[1]-1,query[2]);
-            println!("collection {:?}",collection);
-            println!("tree {:?}",segment_tree);
+//            println!("collection {:?}",collection);
+//            println!("tree {:?}",segment_tree);
         } else {
             println!("{}",segment_tree.get_min(values,query[1]-1,query[2]-1));
         }
